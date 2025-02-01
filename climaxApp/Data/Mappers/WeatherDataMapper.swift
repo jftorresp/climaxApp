@@ -9,7 +9,6 @@ import Foundation
 
 class WeatherDataMapper {
     static func mapForecastToDomain(_ response: ForecastResponse) -> ForecastModel {
-        
         let forecast = response.forecast.forecast.map { forecastDate in
             ForecastDayModel(
                 date: forecastDate.date,
