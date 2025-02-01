@@ -30,17 +30,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4FAF27512D4D1AC300A0844F /* climaxApp */ = {
+		4FAF27A52D4DBD7400A0844F /* climaxApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = climaxApp;
 			sourceTree = "<group>";
 		};
-		4FAF27632D4D1AC500A0844F /* climaxAppTests */ = {
+		4FAF27AD2D4DBD7900A0844F /* climaxAppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = climaxAppTests;
 			sourceTree = "<group>";
 		};
-		4FAF276D2D4D1AC500A0844F /* climaxAppUITests */ = {
+		4FAF27B12D4DBD7B00A0844F /* climaxAppUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = climaxAppUITests;
 			sourceTree = "<group>";
@@ -75,9 +75,9 @@
 		4FAF27462D4D1AC300A0844F = {
 			isa = PBXGroup;
 			children = (
-				4FAF27512D4D1AC300A0844F /* climaxApp */,
-				4FAF27632D4D1AC500A0844F /* climaxAppTests */,
-				4FAF276D2D4D1AC500A0844F /* climaxAppUITests */,
+				4FAF27A52D4DBD7400A0844F /* climaxApp */,
+				4FAF27AD2D4DBD7900A0844F /* climaxAppTests */,
+				4FAF27B12D4DBD7B00A0844F /* climaxAppUITests */,
 				4FAF27502D4D1AC300A0844F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -108,7 +108,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4FAF27512D4D1AC300A0844F /* climaxApp */,
+				4FAF27A52D4DBD7400A0844F /* climaxApp */,
 			);
 			name = climaxApp;
 			packageProductDependencies = (
@@ -131,7 +131,7 @@
 				4FAF27622D4D1AC500A0844F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				4FAF27632D4D1AC500A0844F /* climaxAppTests */,
+				4FAF27AD2D4DBD7900A0844F /* climaxAppTests */,
 			);
 			name = climaxAppTests;
 			packageProductDependencies = (
@@ -154,7 +154,7 @@
 				4FAF276C2D4D1AC500A0844F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				4FAF276D2D4D1AC500A0844F /* climaxAppUITests */,
+				4FAF27B12D4DBD7B00A0844F /* climaxAppUITests */,
 			);
 			name = climaxAppUITests;
 			packageProductDependencies = (
@@ -404,7 +404,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
@@ -441,7 +441,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
