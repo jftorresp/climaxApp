@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol RemoteDataSource {
+protocol WeatherRemoteDataSource {
     func getForecastByCity(_ city: String) async throws -> ForecastResponse
     func searchCity(_ query: String) async throws -> [CityResponse]
 }
 
-class RemoteDataSourceImpl: RemoteDataSource {
+class WeatherRemoteDataSourceImpl: WeatherRemoteDataSource {
     let httpClient: HTTPClient
     let apiKey: String
     
