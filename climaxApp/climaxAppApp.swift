@@ -11,7 +11,7 @@ import SwiftUI
 struct climaxAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashView()
         }
     }
 }
