@@ -12,7 +12,7 @@ struct SplashView: View {
     
     var body: some View {
         if isActive {
-            ContentView()
+            CityForecastView(viewModel: CityForecastViewModel())
         } else {
             ZStack {
                 Color.brandBlue

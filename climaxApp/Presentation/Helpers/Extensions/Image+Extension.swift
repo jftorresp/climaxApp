@@ -9,4 +9,6 @@ import SwiftUI
 
 extension Image {
     static let appLogo = Image("climax_app_logo")
+    
+    static let searchIcon = Image(systemName: "magnifyingglass")
 }
