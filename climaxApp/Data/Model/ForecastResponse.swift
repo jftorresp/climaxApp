@@ -44,7 +44,7 @@ struct ForecastCurrentResponse: Decodable {
 }
 
 struct ForecastDaysResponse: Decodable {
-    let forecast: [ForecastDateResponse]
+    let forecastday: [ForecastDateResponse]
     
     struct ForecastDateResponse: Decodable {
         let date: String

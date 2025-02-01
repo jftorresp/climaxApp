@@ -8,5 +8,5 @@
 import Foundation
 
 class DataConstants {
-    static let baseURL = URL(string: " https://api.weatherapi.com/v1/")!
+    static let baseURL = URL(string: "https://api.weatherapi.com/v1/")!
 }
