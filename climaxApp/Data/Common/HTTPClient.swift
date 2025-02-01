@@ -8,13 +8,13 @@
 import Foundation
 
 protocol HTTPClient {
-    func get(url: URL, parameters: [String: String]?, headers: [String: String]) async throws -> Data
-    func post(url: URL, body: Data, headers: [String: String]) async throws -> Data
+    func get(url: URL, parameters: [String: String]?) async throws -> Data
+    func post(url: URL, body: Data) async throws -> Data
     func performRequest(request: URLRequest) async throws -> Data
 }
 
 class DefaultHTTPClient: HTTPClient {
-    func get(url: URL, parameters: [String: String]? = nil, headers: [String: String] = [:]) async throws -> Data {
+    func get(url: URL, parameters: [String: String]? = nil) async throws -> Data {
         var requestUrl = url
         if let parameters = parameters {
             requestUrl = url.appendingQueryParameters(parameters)
@@ -22,15 +22,13 @@ class DefaultHTTPClient: HTTPClient {
         
         var request = URLRequest(url: requestUrl)
         request.httpMethod = "GET"
-        headers.forEach { request.addValue($1, forHTTPHeaderField: $0) }
         
         return try await performRequest(request: request)
     }
     
-    func post(url: URL, body: Data, headers: [String: String]) async throws -> Data {
+    func post(url: URL, body: Data) async throws -> Data {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        headers.forEach { request.addValue($1, forHTTPHeaderField: $0) }
         request.httpBody = body
         
         return try await performRequest(request: request)

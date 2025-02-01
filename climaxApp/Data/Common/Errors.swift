@@ -25,6 +25,10 @@ enum HTTPError: Error {
     case unknown(code: Int, message: String?)
 }
 
+enum DataError: Error {
+    case apiError(code: Int, message: String)
+}
+
 struct ErrorData: Decodable {
     let error: ErrorDataContent?
 }
