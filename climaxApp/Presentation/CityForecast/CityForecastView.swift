@@ -83,6 +83,8 @@ struct CityForecastView: View {
                 }
             }
             .padding(.horizontal, 20)
+
+            bottomBarView
         }
     }
 }
@@ -90,6 +92,53 @@ struct CityForecastView: View {
 // MARK: Subviews
 
 extension CityForecastView {
+    var bottomBarView: some View {
+        VStack {
+            Rectangle()
+                .foregroundColor(.white.opacity(0.5))
+                .frame(height: 1)
+            HStack {
+                NavigationLink {
+                    EmptyView()
+                } label: {
+                    Image.mapIcon
+                        .resizable()
+                        .renderingMode(.template)
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .frame(width: 20)
+                }
+
+                Spacer()
+                
+                Image.appLongLogo
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120)
+                
+                Spacer()
+                
+                NavigationLink {
+                    EmptyView()
+                } label: {
+                    Image.starSquareIcon
+                        .resizable()
+                        .renderingMode(.template)
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .frame(width: 20)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.top, 12)
+            .padding(.bottom, 50)
+            .padding(.horizontal, 20)
+        }
+        .background(Color.darkBlue)
+        .frame(maxHeight: .infinity, alignment: .bottom)
+        .ignoresSafeArea(.all)
+    }
+    
     var noSelectedCityView: some View {
         VStack {
             Image.cloudSunImg
@@ -195,7 +244,7 @@ extension CityForecastView {
             }
         }
         .padding(.top, 20)
-        .padding(.bottom, 50)
+        .padding(.bottom, 40)
     }
     
     @ViewBuilder
@@ -367,6 +416,7 @@ extension CityForecastView {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.brandDarkBlue)
         .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(.bottom, 80)
     }
 }
 

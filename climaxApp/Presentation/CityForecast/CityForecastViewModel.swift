@@ -48,21 +48,21 @@ class CityForecastViewModel: ObservableObject {
     var uvIndexText: String {
         guard let forecast else { return "" }
         if forecast.currentWeather.uvIndex <= 2 {
-            return "Low. Use sun protection."
+            return "Low"
         } else if forecast.currentWeather.uvIndex >= 3 && forecast.currentWeather.uvIndex <= 5 {
-            return "Moderate. Use sun protection."
+            return "Moderate"
         } else if forecast.currentWeather.uvIndex >= 6 && forecast.currentWeather.uvIndex <= 7  {
-            return "High. Use sun protection."
+            return "High"
         }else if forecast.currentWeather.uvIndex >= 8 && forecast.currentWeather.uvIndex <= 10  {
-            return "Very High. Use sun protection."
+            return "Very High"
         } else {
-            return "Extreme. Use sun protection."
+            return "Extreme"
         }
     }
     
     var dewPointText: String {
         guard let forecast else { return "" }
-        return "The dew point is \(forecast.currentWeather.dewPoint.toIntString())° right now."
+        return "The dew point is \(forecast.currentWeather.dewPoint.toIntString())°"
     }
     
     init(getForecastUseCase: GetForecastByCityUseCase = GetForecastByCityUseCaseImpl()) {

@@ -11,6 +11,9 @@ extension Image {
     /// Logo of the app
     static let appLogo = Image("climax_app_logo")
     
+    /// Long logo of the app
+    static let appLongLogo = Image("climax_long_logo")
+    
     /// Search icon
     static let searchIcon = Image(systemName: "magnifyingglass")
     
@@ -49,6 +52,12 @@ extension Image {
     
     /// Wind icon
     static let windIcon = Image(systemName: "wind")
+    
+    /// Map icon
+    static let mapIcon = Image("map")
+    
+    /// Star square icon
+    static let starSquareIcon = Image("star.square.on.square")
     
     /// Cloud and sun image
     static let cloudSunImg = Image("cloud_sun_img")
