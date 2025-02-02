@@ -50,6 +50,7 @@ struct SearchCityView: View {
                             }
                         }
                     }
+                    .padding(.horizontal, 16)
                 }
             }
         }

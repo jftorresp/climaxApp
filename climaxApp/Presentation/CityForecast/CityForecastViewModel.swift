@@ -6,12 +6,63 @@
 //
 
 import Foundation
+import SwiftUI
 
 class CityForecastViewModel: ObservableObject {
     private let getForecastUseCase: GetForecastByCityUseCase
-    @Published var selectedCity: String = ""
+    @Published var selectedCity: String = "Bogota"
     @Published var forecast: Forecast?
     @Published var errorMessage: String?
+    
+    var currentTemparature: String {
+        guard let forecast else { return "-°" }
+        return forecast.currentWeather.temperature.toIntString()
+    }
+    
+    var currentDayForecast: ForecastDay? {
+        guard let forecast else { return nil }
+        return forecast.forecast[0]
+    }
+    
+    var averageTemperatureText: String {
+        guard let currentDayForecast = currentDayForecast else { return "" }
+        if currentDayForecast.averageTemperature < currentDayForecast.maxTemperature  {
+            return "above average daily hight"
+        } else {
+            return "below average daily hight"
+        }
+    }
+    
+    var feelsLikeTemperatureText: String {
+        guard let forecast else { return "-" }
+        if (forecast.currentWeather.tempFeelsLike == forecast.currentWeather.temperature + 1) || (forecast.currentWeather.tempFeelsLike == forecast.currentWeather.temperature - 1) {
+            return "Similar to the current temperature."
+        } else if (forecast.currentWeather.tempFeelsLike > forecast.currentWeather.temperature + 2) {
+            return "The temperature feels like it is higher."
+        } else {
+            return "The temperature feels cooler."
+        }
+    }
+    
+    var uvIndexText: String {
+        guard let forecast else { return "" }
+        if forecast.currentWeather.uvIndex <= 2 {
+            return "Low. Use sun protection."
+        } else if forecast.currentWeather.uvIndex >= 3 && forecast.currentWeather.uvIndex <= 5 {
+            return "Moderate. Use sun protection."
+        } else if forecast.currentWeather.uvIndex >= 6 && forecast.currentWeather.uvIndex <= 7  {
+            return "High. Use sun protection."
+        }else if forecast.currentWeather.uvIndex >= 8 && forecast.currentWeather.uvIndex <= 10  {
+            return "Very High. Use sun protection."
+        } else {
+            return "Extreme. Use sun protection."
+        }
+    }
+    
+    var dewPointText: String {
+        guard let forecast else { return "" }
+        return "The dew point is \(forecast.currentWeather.dewPoint.toIntString())° right now."
+    }
     
     init(getForecastUseCase: GetForecastByCityUseCase = GetForecastByCityUseCaseImpl()) {
         self.getForecastUseCase = getForecastUseCase
@@ -27,5 +78,35 @@ class CityForecastViewModel: ObservableObject {
         } catch {
             self.errorMessage = "Unexpected error occurred."
         }
+    }
+    
+    func cloudRainIcon(forecast: ForecastDay) -> Image {
+        if forecast.chanceOfRain == 0 {
+            return Image.cloudIcon
+        } else if forecast.chanceOfRain > 0 && forecast.chanceOfRain <= 33 {
+            return Image.cloudDrizzleIcon
+        } else if forecast.chanceOfRain > 33 && forecast.chanceOfRain <= 66 {
+            return Image.cloudRainIcon
+        } else {
+            return .cloudHeavyRainIcon
+        }
+    }
+    
+    func getWeekdayLabel(from dateString: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        guard let date = dateFormatter.date(from: dateString) else { return "-" }
+
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            return "Today"
+        }
+
+        let weekdayFormatter = DateFormatter()
+        weekdayFormatter.dateFormat = "EEE"
+        
+        return weekdayFormatter.string(from: date)
     }
 }

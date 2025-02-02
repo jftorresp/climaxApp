@@ -43,6 +43,7 @@ struct ForecastDayModel {
     let averageTemperature: Double
     let maxWindSpeed: Double
     let totalRainfall: Double
+    let chanceOfRain: Int
     let averageHumidity: Int
     let condition: String
     let conditionIcon: String

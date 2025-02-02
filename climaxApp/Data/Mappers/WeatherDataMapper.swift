@@ -24,6 +24,7 @@ class WeatherDataMapper {
                 averageTemperature: forecastDate.day.avgtemp_c,
                 maxWindSpeed: forecastDate.day.maxwind_kph,
                 totalRainfall: forecastDate.day.totalprecip_mm,
+                chanceOfRain: forecastDate.day.daily_chance_of_rain,
                 averageHumidity: forecastDate.day.avghumidity,
                 condition: forecastDate.day.condition.text,
                 conditionIcon: forecastDate.day.condition.icon,

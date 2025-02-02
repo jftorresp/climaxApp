@@ -57,6 +57,7 @@ struct ForecastDaysResponse: Decodable {
             let avgtemp_c: Double
             let maxwind_kph: Double
             let totalprecip_mm: Double
+            let daily_chance_of_rain: Int
             let avghumidity: Int
             let condition: ForecastConditionResponse
             let uv: Double

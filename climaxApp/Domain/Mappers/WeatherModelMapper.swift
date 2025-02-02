@@ -24,6 +24,7 @@ class WeatherModelMapper {
                 averageTemperature: forecastDate.averageTemperature,
                 maxWindSpeed: forecastDate.maxWindSpeed,
                 totalRainfall: forecastDate.totalRainfall,
+                chanceOfRain: forecastDate.chanceOfRain,
                 averageHumidity: forecastDate.averageHumidity,
                 condition: forecastDate.condition,
                 conditionIcon: forecastDate.conditionIcon,
