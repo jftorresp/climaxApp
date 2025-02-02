@@ -52,4 +52,7 @@ extension Image {
     
     /// Cloud and sun image
     static let cloudSunImg = Image("cloud_sun_img")
+    
+    /// Cloud angry image
+    static let cloudAngryImg = Image("cloud_angry_img")
 }

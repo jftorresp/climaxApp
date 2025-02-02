@@ -80,7 +80,7 @@ class CityForecastViewModel: ObservableObject {
             self.errorMessage = "No location found."
             self.isLoading = false
         } catch {
-            self.errorMessage = "Unexpected error occurred."
+            self.errorMessage = "An unexpected error occurred."
             self.isLoading = false
         }
     }
@@ -153,6 +153,10 @@ extension CityForecastViewModel {
     
     var threeDayForecastLabel: String {
         return "3-DAY FORECAST"
+    }
+    
+    var errorTitleLabel: String {
+        return "Oh no!"
     }
     
     var noCityTitleLabel: String {
