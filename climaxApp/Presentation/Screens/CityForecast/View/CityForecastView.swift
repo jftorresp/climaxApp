@@ -108,6 +108,7 @@ extension CityForecastView {
                         .foregroundColor(.white)
                         .frame(width: 20)
                 }
+                .disabled(true)
 
                 Spacer()
                 
@@ -119,7 +120,7 @@ extension CityForecastView {
                 Spacer()
                 
                 NavigationLink {
-                    EmptyView()
+                    FavoritesView(viewModel: FavoritesViewModel())
                 } label: {
                     Image.starSquareIcon
                         .resizable()

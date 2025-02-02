@@ -17,6 +17,9 @@ extension Image {
     /// Search icon
     static let searchIcon = Image(systemName: "magnifyingglass")
     
+    /// Arrow eft icon
+    static let arrowLeftIcon = Image(systemName: "arrow.left")
+    
     /// Star unfilled icon
     static let starIcon = Image(systemName: "star")
 
