@@ -47,12 +47,14 @@ struct CityForecastView: View {
                         Button {
                             
                         } label: {
-                            Image.starIcon
-                                .resizable()
-                                .renderingMode(.template)
-                                .scaledToFit()
-                                .foregroundColor(.white)
-                                .frame(width: 20)
+                            if !viewModel.selectedCity.isEmpty {
+                                Image.starIcon
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 20)
+                            }
                         }
                     }
                 }
