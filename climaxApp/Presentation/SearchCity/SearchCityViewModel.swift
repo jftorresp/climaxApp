@@ -47,3 +47,25 @@ class SearchCityViewModel: ObservableObject {
         self.noResultsFound = false
     }
 }
+
+extension SearchCityViewModel {
+    var searchTitleLabel: String {
+        return "Search"
+    }
+    
+    var noSearchTitleLabel: String {
+        return "Search!"
+    }
+    
+    var noSearchSubTitleLabel: String {
+        return "Type the name of a city to search for it's forecast."
+    }
+    
+    var noResultsTitleLabel: String {
+        return "No Results"
+    }
+    
+    var noResultsSubTitleLabel: String {
+        return "No cities found for \"\(searchText)\"."
+    }
+}

@@ -54,14 +54,17 @@ extension Image {
     static let windIcon = Image(systemName: "wind")
     
     /// Map icon
-    static let mapIcon = Image("map")
+    static let mapIcon = Image(systemName: "map")
     
     /// Star square icon
-    static let starSquareIcon = Image("star.square.on.square")
+    static let starSquareIcon = Image(systemName: "star.square.on.square")
     
     /// Cloud and sun image
     static let cloudSunImg = Image("cloud_sun_img")
     
     /// Cloud angry image
     static let cloudAngryImg = Image("cloud_angry_img")
+    
+    /// Sun image
+    static let sunImg = Image("sun_img")
 }
