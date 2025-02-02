@@ -10,8 +10,9 @@ import SwiftUI
 
 class CityForecastViewModel: ObservableObject {
     private let getForecastUseCase: GetForecastByCityUseCase
-    @Published var selectedCity: String = "Bogota"
+    @Published var selectedCity: String = ""
     @Published var forecast: Forecast?
+    @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
     var currentTemparature: String {
@@ -70,13 +71,17 @@ class CityForecastViewModel: ObservableObject {
     
     @MainActor
     func getForecast() async throws {
+        self.isLoading = true
         do {
             self.forecast = try await getForecastUseCase.execute(selectedCity)
+            self.isLoading = false
             self.errorMessage = nil
         } catch DomainError.noLocationFound {
             self.errorMessage = "No location found."
+            self.isLoading = false
         } catch {
             self.errorMessage = "Unexpected error occurred."
+            self.isLoading = false
         }
     }
     
@@ -148,6 +153,14 @@ extension CityForecastViewModel {
     
     var threeDayForecastLabel: String {
         return "3-DAY FORECAST"
+    }
+    
+    var noCityTitleLabel: String {
+        return "No city selected"
+    }
+    
+    var noCitySubtitleLabel: String {
+        return "Please search for a city to view the forecast."
     }
     
     func maxTempLabel(_ value: String) -> String {

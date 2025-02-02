@@ -49,4 +49,7 @@ extension Image {
     
     /// Wind icon
     static let windIcon = Image(systemName: "wind")
+    
+    /// Cloud and sun image
+    static let cloudSunImg = Image("cloud_sun_img")
 }

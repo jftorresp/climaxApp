@@ -65,47 +65,57 @@ struct CityForecastView: View {
             Color.brandBlue
                 .ignoresSafeArea(.all)
             VStack {
-                if let forecast = viewModel.forecast {
-                    ForecastHeader(forecast)
-                    ScrollView(showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            if let currentDayForecast = viewModel.currentDayForecast {
-                                ForecastInfoCard(
-                                    title: viewModel.averageTitle,
-                                    additionalInfo: viewModel.averageTemperatureText,
-                                    icon: .chartIcon,
-                                    value: viewModel.celsiusLabel(currentDayForecast.averageTemperature.toIntString())
-                                )
-                            }
-                            ForecastInfoCard(
-                                title: viewModel.feelsLikeTitle,
-                                additionalInfo: viewModel.feelsLikeTemperatureText,
-                                icon: .thermometerIcon,
-                                value: viewModel.celsiusLabel(forecast.currentWeather.tempFeelsLike.toIntString())
-                            )
-                        }
+                if viewModel.selectedCity.isEmpty {
+                    noSelectedCityView
+                } else {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
+                            .scaleEffect(1.5)
+                    } else {
+                        if let forecast = viewModel.forecast {
+                            ForecastHeader(forecast)
+                            ScrollView(showsIndicators: false) {
+                                HStack(spacing: 12) {
+                                    if let currentDayForecast = viewModel.currentDayForecast {
+                                        ForecastInfoCard(
+                                            title: viewModel.averageTitle,
+                                            additionalInfo: viewModel.averageTemperatureText,
+                                            icon: .chartIcon,
+                                            value: viewModel.celsiusLabel(currentDayForecast.averageTemperature.toIntString())
+                                        )
+                                    }
+                                    ForecastInfoCard(
+                                        title: viewModel.feelsLikeTitle,
+                                        additionalInfo: viewModel.feelsLikeTemperatureText,
+                                        icon: .thermometerIcon,
+                                        value: viewModel.celsiusLabel(forecast.currentWeather.tempFeelsLike.toIntString())
+                                    )
+                                }
 
-                        ThreeDayForecast(forecast)
-                        
-                        HStack(spacing: 12) {
-                            ForecastInfoCard(
-                                title: viewModel.uvIndexTitle,
-                                additionalInfo: viewModel.uvIndexText,
-                                icon: .sunMaxIcon,
-                                value: "\(forecast.currentWeather.uvIndex.toIntString())")
-                            ForecastInfoCard(
-                                title: viewModel.humidityTitle,
-                                additionalInfo: viewModel.dewPointText,
-                                icon: .humidityIcon,
-                                value: viewModel.percentageLabel(forecast.currentWeather.humidity))
+                                ThreeDayForecast(forecast)
+                                
+                                HStack(spacing: 12) {
+                                    ForecastInfoCard(
+                                        title: viewModel.uvIndexTitle,
+                                        additionalInfo: viewModel.uvIndexText,
+                                        icon: .sunMaxIcon,
+                                        value: "\(forecast.currentWeather.uvIndex.toIntString())")
+                                    ForecastInfoCard(
+                                        title: viewModel.humidityTitle,
+                                        additionalInfo: viewModel.dewPointText,
+                                        icon: .humidityIcon,
+                                        value: viewModel.percentageLabel(forecast.currentWeather.humidity))
+                                }
+                                
+                                ForecastWindCard(forecast: forecast)
+                            }
                         }
-                        
-                        ForecastWindCard(forecast: forecast)
                     }
-                }
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.white)
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.white)
+                    }
                 }
             }
             .padding(.horizontal, 20)
@@ -116,6 +126,23 @@ struct CityForecastView: View {
 // MARK: Subviews
 
 extension CityForecastView {
+    var noSelectedCityView: some View {
+        VStack {
+            Image.cloudSunImg
+                .resizable()
+                .scaledToFit()
+                .frame(height: 200)
+            Text(viewModel.noCityTitleLabel)
+                .font(.system(size: 36, weight: .bold))
+                .foregroundColor(.white)
+            Text(viewModel.noCitySubtitleLabel)
+                .font(.system(size: 16))
+                .foregroundColor(.white)
+                .opacity(0.6)
+        }
+        .padding(.horizontal, 20)
+    }
+    
     @ViewBuilder
     func ForecastHeader(_ forecast: Forecast) -> some View {
         VStack {
