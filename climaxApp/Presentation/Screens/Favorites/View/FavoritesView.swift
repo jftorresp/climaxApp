@@ -38,8 +38,40 @@ struct FavoritesView: View {
                     .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 20)
+                
+                if viewModel.favoriteCities.isEmpty {
+                    noFavoritesView
+                } else {
+                    EmptyView()
+                }
             }
             .navigationBarBackButtonHidden(true)
+        }
+    }
+}
+
+// MARK: Subviews
+
+extension FavoritesView {
+    var noFavoritesView: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Spacer()
+            VStack {
+                Image.cloudRainImg
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 250)
+                Text("No favorites :(")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(.white)
+                Text("Favorite a city from the search to view it faster.")
+                    .font(.system(size: 18))
+                    .foregroundColor(.white.opacity(0.5))
+                    .multilineTextAlignment(.center)
+            }
+            .padding(.horizontal, 20)
+            .frame(maxWidth: .infinity, alignment: .center)
+            Spacer()
         }
     }
 }

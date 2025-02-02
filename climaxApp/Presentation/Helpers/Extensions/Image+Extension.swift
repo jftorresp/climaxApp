@@ -70,4 +70,7 @@ extension Image {
     
     /// Sun image
     static let sunImg = Image("sun_img")
+    
+    /// Cloud rain image
+    static let cloudRainImg = Image("cloud_rain_img")
 }
