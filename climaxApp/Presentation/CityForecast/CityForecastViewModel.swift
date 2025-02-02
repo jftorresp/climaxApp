@@ -110,3 +110,63 @@ class CityForecastViewModel: ObservableObject {
         return weekdayFormatter.string(from: date)
     }
 }
+
+// MARK: Labels
+
+extension CityForecastViewModel {
+    var averageTitle: String {
+        return "AVERAGE"
+    }
+    
+    var feelsLikeTitle: String {
+        return "FEELS LIKE"
+    }
+    
+    var uvIndexTitle: String {
+        return "UV INDEX"
+    }
+    
+    var humidityTitle: String {
+        return "HUMIDITY"
+    }
+    
+    var windTitle: String {
+        return "WIND"
+    }
+    
+    var windLabel: String {
+        return "Wind"
+    }
+    
+    var gustsLabel: String {
+        return "Gusts"
+    }
+    
+    var windDirectionLabel: String {
+        return "Direction"
+    }
+    
+    var threeDayForecastLabel: String {
+        return "3-DAY FORECAST"
+    }
+    
+    func maxTempLabel(_ value: String) -> String {
+        return "MAX: \(value)°"
+    }
+    
+    func minTempLabel(_ value: String) -> String {
+        return "MIN: \(value)°"
+    }
+    
+    func speedItemLabel(_ value: String) -> String {
+        return "\(value) km/h"
+    }
+    
+    func percentageLabel(_ value: Int) -> String {
+        return "\(value)%"
+    }
+    
+    func celsiusLabel(_ value: String) -> String {
+        return "\(value)°"
+    }
+}

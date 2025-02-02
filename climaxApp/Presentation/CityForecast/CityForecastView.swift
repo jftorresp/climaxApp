@@ -71,32 +71,33 @@ struct CityForecastView: View {
                         HStack(spacing: 12) {
                             if let currentDayForecast = viewModel.currentDayForecast {
                                 ForecastInfoCard(
-                                    title: "AVERAGE",
+                                    title: viewModel.averageTitle,
                                     additionalInfo: viewModel.averageTemperatureText,
-                                    icon: "chart.line.uptrend.xyaxis",
-                                    value: "\(currentDayForecast.averageTemperature.toIntString())°")
+                                    icon: .chartIcon,
+                                    value: viewModel.celsiusLabel(currentDayForecast.averageTemperature.toIntString())
+                                )
                             }
                             ForecastInfoCard(
-                                title: "FEELS LIKE",
+                                title: viewModel.feelsLikeTitle,
                                 additionalInfo: viewModel.feelsLikeTemperatureText,
-                                icon: "thermometer.medium",
-                                value: "\(forecast.currentWeather.tempFeelsLike.toIntString())°")
-
+                                icon: .thermometerIcon,
+                                value: viewModel.celsiusLabel(forecast.currentWeather.tempFeelsLike.toIntString())
+                            )
                         }
 
                         ThreeDayForecast(forecast)
                         
                         HStack(spacing: 12) {
                             ForecastInfoCard(
-                                title: "UV INDEX",
+                                title: viewModel.uvIndexTitle,
                                 additionalInfo: viewModel.uvIndexText,
-                                icon: "sun.max.fill",
+                                icon: .sunMaxIcon,
                                 value: "\(forecast.currentWeather.uvIndex.toIntString())")
                             ForecastInfoCard(
-                                title: "HUMIDITY",
+                                title: viewModel.humidityTitle,
                                 additionalInfo: viewModel.dewPointText,
-                                icon: "humidity.fill",
-                                value: "\(forecast.currentWeather.humidity)%")
+                                icon: .humidityIcon,
+                                value: viewModel.percentageLabel(forecast.currentWeather.humidity))
                         }
                         
                         ForecastWindCard(forecast: forecast)
@@ -118,11 +119,11 @@ extension CityForecastView {
     @ViewBuilder
     func ForecastHeader(_ forecast: Forecast) -> some View {
         VStack {
-            Text("\(forecast.name)")
+            Text(forecast.name)
                 .font(.system(size: 36))
                 .foregroundColor(.white)
                 .shadow(radius: 5)
-            Text("\(viewModel.currentTemparature)°")
+            Text(viewModel.celsiusLabel(viewModel.currentTemparature))
                 .font(.system(size: 90, weight: .thin))
                 .foregroundColor(.white)
                 .shadow(radius: 5)
@@ -132,11 +133,11 @@ extension CityForecastView {
             
             if let currentDayForecast = viewModel.currentDayForecast {
                 HStack {
-                    Text("MAX:\(currentDayForecast.maxTemperature.toIntString())°")
+                    Text(viewModel.maxTempLabel(currentDayForecast.maxTemperature.toIntString()))
                         .font(.system(size: 20))
                         .foregroundColor(.white)
                         .shadow(radius: 5)
-                    Text("MIN:\(currentDayForecast.minTemperature.toIntString())°")
+                    Text(viewModel.minTempLabel(currentDayForecast.minTemperature.toIntString()))
                         .font(.system(size: 20))
                         .foregroundColor(.white)
                         .shadow(radius: 5)
@@ -148,11 +149,11 @@ extension CityForecastView {
     }
     
     @ViewBuilder
-    func ForecastInfoCard(title: String, additionalInfo: String? = nil, icon: String, value: String) -> some View {
+    func ForecastInfoCard(title: String, additionalInfo: String? = nil, icon: Image, value: String) -> some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 HStack {
-                    Image(systemName: icon)
+                    icon
                         .resizable()
                         .renderingMode(.template)
                         .foregroundColor(.white)
@@ -185,14 +186,16 @@ extension CityForecastView {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 HStack {
-                    Image(systemName: "calendar")
+                    Image.calendarIcon
                         .resizable()
                         .renderingMode(.template)
                         .foregroundColor(.white)
+                        .opacity(0.5)
                         .scaledToFit()
                         .frame(width: 16)
-                    Text("3-DAY FORECAST")
+                    Text(viewModel.threeDayForecastLabel)
                         .foregroundColor(.white)
+                        .opacity(0.5)
                 }
                 Rectangle()
                     .frame(height: 1)
@@ -215,7 +218,7 @@ extension CityForecastView {
                                         .frame(width: 22)
                                         .padding(.horizontal, 16)
                                     if forecastDay.chanceOfRain > 0 {
-                                        Text("\(forecastDay.chanceOfRain)%")
+                                        Text(viewModel.percentageLabel(forecastDay.chanceOfRain))
                                             .font(.system(size: 12))
                                             .foregroundColor(.white)
                                     }
@@ -245,12 +248,12 @@ extension CityForecastView {
     @ViewBuilder
     func TemperatureRangePerDay(forecast: ForecastDay) -> some View {
         HStack {
-            Text("\(forecast.minTemperature.toIntString())°")
+            Text(viewModel.celsiusLabel(forecast.minTemperature.toIntString()))
                 .font(.system(size: 16))
                 .foregroundColor(.white)
             ProgressView(value: forecast.averageTemperature, total: forecast.maxTemperature)
                 .foregroundColor(.yellow)
-            Text("\(forecast.maxTemperature.toIntString())°")
+            Text(viewModel.celsiusLabel(forecast.maxTemperature.toIntString()))
                 .font(.system(size: 16))
                 .foregroundColor(.white)
         }
@@ -261,13 +264,13 @@ extension CityForecastView {
         VStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 HStack {
-                    Image(systemName: "wind")
+                    Image.windIcon
                         .resizable()
                         .renderingMode(.template)
                         .foregroundColor(.white)
                         .scaledToFit()
                         .frame(height: 12)
-                    Text("WIND")
+                    Text(viewModel.windTitle)
                         .font(.system(size: 12))
                         .foregroundColor(.white)
                 }
@@ -275,29 +278,29 @@ extension CityForecastView {
                 
                 VStack(spacing: 16) {
                     HStack {
-                        Text("Wind")
+                        Text(viewModel.windLabel)
                             .font(.system(size: 16))
                             .foregroundColor(.white)
                         Spacer()
-                        Text("\(forecast.currentWeather.windSpeed.toIntString()) km/h")
+                        Text(viewModel.speedItemLabel(forecast.currentWeather.windSpeed.toIntString()))
                             .font(.system(size: 16))
                             .foregroundColor(.white)
                             .opacity(0.5)
                     }
                     
                     HStack {
-                        Text("Gusts")
+                        Text(viewModel.gustsLabel)
                             .font(.system(size: 16))
                             .foregroundColor(.white)
                         Spacer()
-                        Text("\(forecast.currentWeather.gustSpeed.toIntString()) km/h")
+                        Text(viewModel.speedItemLabel(forecast.currentWeather.gustSpeed.toIntString()))
                             .font(.system(size: 16))
                             .foregroundColor(.white)
                             .opacity(0.5)
                     }
                     
                     HStack {
-                        Text("Direction")
+                        Text(viewModel.windDirectionLabel)
                             .font(.system(size: 16))
                             .foregroundColor(.white)
                         Spacer()
