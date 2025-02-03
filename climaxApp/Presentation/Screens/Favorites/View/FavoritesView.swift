@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct FavoritesView: View {
+    @Environment(\.horizontalSizeClass) var sizeClass
     @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel: FavoritesViewModel
     @Binding var selectedFavoriteCity: City?
@@ -25,6 +26,10 @@ struct FavoritesView: View {
                             .scaledToFit()
                             .foregroundColor(.white)
                             .frame(height: 16)
+                            .if(sizeClass != .compact, transform: { view in
+                                view
+                                    .padding(.top, 30)
+                            })
                     }
                 }
                 
@@ -39,7 +44,11 @@ struct FavoritesView: View {
                             .renderingMode(.template)
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 20)
+                            .frame(height: 20)
+                            .if(sizeClass != .compact, transform: { view in
+                                view
+                                    .padding(.top, 30)
+                            })
                     }
                 }
             }
@@ -57,6 +66,10 @@ struct FavoritesView: View {
                     .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 20)
+                    .if(sizeClass != .compact, transform: { view in
+                        view
+                            .padding(.top, 10)
+                    })
                 
                 if viewModel.favoriteCities.isEmpty {
                     noFavoritesView

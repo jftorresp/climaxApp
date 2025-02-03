@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CityForecastView: View {
+    @Environment(\.horizontalSizeClass) var sizeClass
     @StateObject var viewModel: CityForecastViewModel
     
     init(viewModel: CityForecastViewModel) {
@@ -42,6 +43,10 @@ struct CityForecastView: View {
             VStack {
                 if !viewModel.isLoading {
                     topBarView
+                        .if(sizeClass != .compact, transform: { view in
+                            view
+                                .padding(.top, 30)
+                        })
                 }
                 
                 if viewModel.isLoading {
@@ -50,15 +55,17 @@ struct CityForecastView: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
                         .scaleEffect(1.5)
                     Spacer()
-                }
-                
-                if viewModel.selectedCity == nil {
+                } else if viewModel.selectedCity == nil {
                     Spacer()
                     noSelectedCityView
                     Spacer()
                 } else {
                     if let forecast = viewModel.forecast {
-                        ForecastView(forecast)
+                        if sizeClass == .compact {
+                            ForecastView(forecast)
+                        } else {
+                            LandscapeForecastView(forecast)
+                        }
                     }
                 }
                 
@@ -124,9 +131,11 @@ extension CityForecastView {
     
     var bottomBarView: some View {
         VStack {
-            Rectangle()
-                .foregroundColor(.white.opacity(0.5))
-                .frame(height: 1)
+            if sizeClass == .compact {
+                Rectangle()
+                    .foregroundColor(.white.opacity(0.5))
+                    .frame(height: 1)
+            }
             HStack {
                 NavigationLink {
                     EmptyView()
@@ -162,12 +171,19 @@ extension CityForecastView {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
-            .padding(.bottom, 50)
+            .padding(.bottom, sizeClass == .compact ? 50 : 12)
             .padding(.horizontal, 20)
         }
-        .background(Color.darkBlue)
+        .background(Color.darkBlue.opacity(sizeClass == .compact ? 1 : 0.7))
+        .if(sizeClass != .compact) { view in
+            view
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+        }
         .frame(maxHeight: .infinity, alignment: .bottom)
-        .ignoresSafeArea(.all)
+        .if(sizeClass == .compact) { frame in
+            frame
+                .ignoresSafeArea(.all)
+        }
     }
     
     var noSelectedCityView: some View {
@@ -202,6 +218,49 @@ extension CityForecastView {
                 .opacity(0.6)
         }
         .padding(.horizontal, 20)
+    }
+    
+    @ViewBuilder
+    func LandscapeForecastView(_ forecast: Forecast) -> some View {
+        HStack {
+            ForecastHeader(forecast)
+            Spacer()
+            ScrollView(showsIndicators: false) {
+                HStack(spacing: 12) {
+                    if let currentDayForecast = viewModel.currentDayForecast {
+                        ForecastInfoCard(
+                            title: viewModel.averageTitle,
+                            additionalInfo: viewModel.averageTemperatureText,
+                            icon: .chartIcon,
+                            value: viewModel.celsiusLabel(currentDayForecast.averageTemperature.toIntString())
+                        )
+                    }
+                    ForecastInfoCard(
+                        title: viewModel.feelsLikeTitle,
+                        additionalInfo: viewModel.feelsLikeTemperatureText,
+                        icon: .thermometerIcon,
+                        value: viewModel.celsiusLabel(forecast.currentWeather.tempFeelsLike.toIntString())
+                    )
+                }
+
+                ThreeDayForecast(forecast)
+                
+                HStack(spacing: 12) {
+                    ForecastInfoCard(
+                        title: viewModel.uvIndexTitle,
+                        additionalInfo: viewModel.uvIndexText,
+                        icon: .sunMaxIcon,
+                        value: "\(forecast.currentWeather.uvIndex.toIntString())")
+                    ForecastInfoCard(
+                        title: viewModel.humidityTitle,
+                        additionalInfo: viewModel.dewPointText,
+                        icon: .humidityIcon,
+                        value: viewModel.percentageLabel(forecast.currentWeather.humidity))
+                }
+                
+                ForecastWindCard(forecast: forecast)
+            }
+        }
     }
     
     @ViewBuilder
@@ -276,6 +335,9 @@ extension CityForecastView {
         }
         .padding(.top, 20)
         .padding(.bottom, 40)
+        .if(sizeClass != .compact) { view in
+            view.frame(width: 250)
+        }
     }
     
     @ViewBuilder

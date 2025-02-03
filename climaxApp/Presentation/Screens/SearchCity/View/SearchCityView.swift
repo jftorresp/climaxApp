@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SearchCityView: View {
+    @Environment(\.horizontalSizeClass) var sizeClass
     @Environment(\.presentationMode) var presentationMode
     @Binding var selectedCity: City?
     @StateObject var viewModel: SearchCityViewModel
@@ -22,6 +23,10 @@ struct SearchCityView: View {
                 .ignoresSafeArea(.all)
             VStack(alignment: .leading, spacing: 10) {
                 searchHeaderView
+                    .if(sizeClass != .compact, transform: { view in
+                        view
+                            .padding(.top, 30)
+                    })
                 
                 if viewModel.searchText.isEmpty {
                     noSearchView
