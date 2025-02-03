@@ -17,6 +17,8 @@ class CityForecastViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var favoriteCities: [City] = []
     
+    @Published var isLandscape: Bool = false
+    
     var currentTemparature: String {
         guard let forecast else { return "-°" }
         return forecast.currentWeather.temperature.toIntString()
@@ -41,9 +43,9 @@ class CityForecastViewModel: ObservableObject {
         if (forecast.currentWeather.tempFeelsLike == forecast.currentWeather.temperature + 1) || (forecast.currentWeather.tempFeelsLike == forecast.currentWeather.temperature - 1) {
             return "Similar to the current temperature."
         } else if (forecast.currentWeather.tempFeelsLike > forecast.currentWeather.temperature + 2) {
-            return "The temperature feels like it is higher."
+            return "Temperature feels hotter."
         } else {
-            return "The temperature feels cooler."
+            return "Temperature feels cooler."
         }
     }
     

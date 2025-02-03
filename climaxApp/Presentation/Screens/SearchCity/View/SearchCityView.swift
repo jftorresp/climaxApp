@@ -8,35 +8,43 @@
 import SwiftUI
 
 struct SearchCityView: View {
-    @Environment(\.horizontalSizeClass) var sizeClass
     @Environment(\.presentationMode) var presentationMode
     @Binding var selectedCity: City?
+    @State private var isLandscape: Bool = false
     @StateObject var viewModel: SearchCityViewModel
-    
+
     var body: some View {
         content
     }
     
     var content: some View {
-        ZStack {
-            Color.brandBlue
-                .ignoresSafeArea(.all)
-            VStack(alignment: .leading, spacing: 10) {
-                searchHeaderView
-                    .if(sizeClass != .compact, transform: { view in
-                        view
-                            .padding(.top, 30)
-                    })
-                
-                if viewModel.searchText.isEmpty {
-                    noSearchView
-                } else if viewModel.noResultsFound {
-                    noResultsView
-                } else {
-                    searchResultsView
+        GeometryReader { geometry in
+            let newIsLandscape = geometry.size.width > geometry.size.height
+            
+            ZStack {
+                Color.brandBlue
+                    .ignoresSafeArea(.all)
+                VStack(alignment: .leading, spacing: 10) {
+                    searchHeaderView
+                        .if(isLandscape, transform: { view in
+                            view
+                                .padding(.top, 20)
+                        })
+                    
+                    if viewModel.searchText.isEmpty {
+                        noSearchView
+                    } else if viewModel.noResultsFound {
+                        noResultsView
+                    } else {
+                        searchResultsView
+                    }
                 }
+                .navigationBarBackButtonHidden(true)
             }
-            .navigationBarBackButtonHidden(true)
+            .onAppear { isLandscape = newIsLandscape }
+            .onChange(of: newIsLandscape) { newValue in
+                isLandscape = newValue
+            }
         }
     }
 }

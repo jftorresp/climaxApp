@@ -8,48 +8,19 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @Environment(\.horizontalSizeClass) var sizeClass
     @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel: FavoritesViewModel
     @Binding var selectedFavoriteCity: City?
-    
+    @State private var isLandscape: Bool = false
+
     var body: some View {
         content
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Image.arrowLeftIcon
-                            .resizable()
-                            .renderingMode(.template)
-                            .scaledToFit()
-                            .foregroundColor(.white)
-                            .frame(height: 16)
-                            .if(sizeClass != .compact, transform: { view in
-                                view
-                                    .padding(.top, 30)
-                            })
-                    }
+                    backButton
                 }
-                
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        withAnimation {
-                            viewModel.deleteMode.toggle()
-                        }
-                    } label: {
-                        Image.trashFillIcon
-                            .resizable()
-                            .renderingMode(.template)
-                            .scaledToFit()
-                            .foregroundColor(.white)
-                            .frame(height: 20)
-                            .if(sizeClass != .compact, transform: { view in
-                                view
-                                    .padding(.top, 30)
-                            })
-                    }
+                    deleteFavoritesButton
                 }
             }
             .onAppear {
@@ -58,33 +29,27 @@ struct FavoritesView: View {
     }
     
     var content: some View {
-        ZStack {
-            Color.brandBlue
-                .ignoresSafeArea(.all)
-            VStack(alignment: .leading) {
-                Text("Favorites")
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
-                    .if(sizeClass != .compact, transform: { view in
-                        view
-                            .padding(.top, 10)
-                    })
-                
-                if viewModel.favoriteCities.isEmpty {
-                    noFavoritesView
-                } else {
-                    ScrollView {
-                        LazyVStack(alignment: .leading) {
-                            ForEach(viewModel.favoriteCities, id: \.id) { city in
-                                FavoriteCityView(city)
-                            }
-                        }
-                        .padding(.horizontal, 20)
+        GeometryReader { geometry in
+            let newIsLandscape = geometry.size.width > geometry.size.height
+            
+            ZStack {
+                Color.brandBlue
+                    .ignoresSafeArea(.all)
+                VStack(alignment: .leading) {
+                    favoritesHeaderView
+                    
+                    if viewModel.favoriteCities.isEmpty {
+                        noFavoritesView
+                    } else {
+                        favoritesListView
                     }
                 }
+                .navigationBarBackButtonHidden(true)
             }
-            .navigationBarBackButtonHidden(true)
+            .onAppear { isLandscape = newIsLandscape }
+            .onChange(of: newIsLandscape) { newValue in
+                isLandscape = newValue
+            }
         }
     }
 }
@@ -92,6 +57,53 @@ struct FavoritesView: View {
 // MARK: Subviews
 
 extension FavoritesView {
+    var favoritesHeaderView: some View {
+        Text(viewModel.favoritesTitleLabel)
+            .font(.system(size: 36, weight: .bold))
+            .foregroundColor(.white)
+            .padding(.horizontal, 20)
+            .if(isLandscape, transform: { view in
+                view
+                    .padding(.top, 10)
+            })
+    }
+    
+    var backButton: some View {
+        Button {
+            presentationMode.wrappedValue.dismiss()
+        } label: {
+            Image.arrowLeftIcon
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .foregroundColor(.white)
+                .frame(height: 16)
+                .if(isLandscape, transform: { view in
+                    view
+                        .padding(.top, 30)
+                })
+        }
+    }
+    
+    var deleteFavoritesButton: some View {
+        Button {
+            withAnimation {
+                viewModel.deleteMode.toggle()
+            }
+        } label: {
+            Image.trashFillIcon
+                .resizable()
+                .renderingMode(.template)
+                .scaledToFit()
+                .foregroundColor(.white)
+                .frame(height: 20)
+                .if(isLandscape, transform: { view in
+                    view
+                        .padding(.top, 30)
+                })
+        }
+    }
+    
     var noFavoritesView: some View {
         VStack(alignment: .leading, spacing: 10) {
             Spacer()
@@ -100,10 +112,10 @@ extension FavoritesView {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 250)
-                Text("No favorites :(")
+                Text(viewModel.noFavoritesTitleLabel)
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(.white)
-                Text("Favorite a city from the search to view it faster.")
+                Text(viewModel.noFavoritesSubTitleLabel)
                     .font(.system(size: 18))
                     .foregroundColor(.white.opacity(0.5))
                     .multilineTextAlignment(.center)
@@ -111,6 +123,17 @@ extension FavoritesView {
             .padding(.horizontal, 20)
             .frame(maxWidth: .infinity, alignment: .center)
             Spacer()
+        }
+    }
+    
+    var favoritesListView: some View {
+        ScrollView {
+            LazyVStack(alignment: .leading) {
+                ForEach(viewModel.favoriteCities, id: \.id) { city in
+                    FavoriteCityView(city)
+                }
+            }
+            .padding(.horizontal, 20)
         }
     }
     
@@ -142,7 +165,7 @@ extension FavoritesView {
 
                     HStack {
                         Spacer()
-                        Text("LAT:\(String(format: "%.1f", city.latitude))°, LON:\(String(format: "%.1f", city.longitude))°")
+                        Text(viewModel.latitudeLongitudeLabel(lat: city.latitude, lon: city.longitude))
                             .font(.system(size: 14, weight: .medium))
                             .foregroundColor(.white)
                             .shadow(radius: 5)

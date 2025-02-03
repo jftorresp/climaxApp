@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct CityForecastView: View {
-    @Environment(\.horizontalSizeClass) var sizeClass
     @StateObject var viewModel: CityForecastViewModel
-    
+
     init(viewModel: CityForecastViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
         
@@ -37,47 +36,61 @@ struct CityForecastView: View {
     }
     
     var content: some View {
-        ZStack {
-            Color.brandBlue
-                .ignoresSafeArea(.all)
-            VStack {
-                if !viewModel.isLoading {
-                    topBarView
-                        .if(sizeClass != .compact, transform: { view in
-                            view
-                                .padding(.top, 30)
-                        })
-                }
-                
-                if viewModel.isLoading {
-                    Spacer()
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
-                        .scaleEffect(1.5)
-                    Spacer()
-                } else if viewModel.selectedCity == nil {
-                    Spacer()
-                    noSelectedCityView
-                    Spacer()
-                } else {
-                    if let forecast = viewModel.forecast {
-                        if sizeClass == .compact {
-                            ForecastView(forecast)
-                        } else {
-                            LandscapeForecastView(forecast)
+        GeometryReader { geometry in
+            let newIsLandscape = geometry.size.width > geometry.size.height
+            
+            ZStack {
+                Color.brandBlue
+                    .ignoresSafeArea(.all)
+                VStack {
+                    if !viewModel.isLoading {
+                        topBarView
+                            .if(viewModel.isLandscape, transform: { view in
+                                view
+                                    .padding(.top, 30)
+                            })
+                    }
+                    
+                    if viewModel.isLoading {
+                        Spacer()
+                        loadingView
+                        Spacer()
+                    } else if viewModel.selectedCity == nil {
+                        Spacer()
+                        EventView(
+                            title: viewModel.noCityTitleLabel,
+                            subtitle: viewModel.noCitySubtitleLabel,
+                            image: .cloudSunImg
+                        )
+                        Spacer()
+                    } else {
+                        if let forecast = viewModel.forecast {
+                            if !viewModel.isLandscape {
+                                PortraitForecastView(forecast)
+                            } else {
+                                LandscapeForecastView(forecast)
+                            }
                         }
                     }
+                    
+                    if let errorMessage = viewModel.errorMessage {
+                        Spacer()
+                        EventView(
+                            title: viewModel.errorTitleLabel,
+                            subtitle: errorMessage,
+                            image: .cloudAngryImg
+                        )
+                        Spacer()
+                    }
                 }
+                .padding(.horizontal, 20)
                 
-                if let errorMessage = viewModel.errorMessage {
-                    Spacer()
-                    ErrorView(error: errorMessage)
-                    Spacer()
-                }
+                bottomBarView
             }
-            .padding(.horizontal, 20)
-            
-            bottomBarView
+            .onAppear { viewModel.isLandscape = newIsLandscape }
+            .onChange(of: newIsLandscape) { newValue in
+                viewModel.isLandscape = newValue
+            }
         }
     }
 }
@@ -85,6 +98,12 @@ struct CityForecastView: View {
 // MARK: Subviews
 
 extension CityForecastView {
+    var loadingView: some View {
+        ProgressView()
+            .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
+            .scaleEffect(1.5)
+    }
+    
     var topBarView: some View {
         HStack {
             Button {
@@ -131,7 +150,7 @@ extension CityForecastView {
     
     var bottomBarView: some View {
         VStack {
-            if sizeClass == .compact {
+            if !viewModel.isLandscape {
                 Rectangle()
                     .foregroundColor(.white.opacity(0.5))
                     .frame(height: 1)
@@ -171,137 +190,96 @@ extension CityForecastView {
             }
             .frame(maxWidth: .infinity)
             .padding(.top, 12)
-            .padding(.bottom, sizeClass == .compact ? 50 : 12)
+            .padding(.bottom, !viewModel.isLandscape ? 50 : 12)
             .padding(.horizontal, 20)
         }
-        .background(Color.darkBlue.opacity(sizeClass == .compact ? 1 : 0.7))
-        .if(sizeClass != .compact) { view in
+        .background(Color.darkBlue.opacity(!viewModel.isLandscape ? 1 : 0.7))
+        .if(viewModel.isLandscape) { view in
             view
                 .clipShape(RoundedRectangle(cornerRadius: 20))
         }
         .frame(maxHeight: .infinity, alignment: .bottom)
-        .if(sizeClass == .compact) { frame in
+        .if(!viewModel.isLandscape) { frame in
             frame
                 .ignoresSafeArea(.all)
         }
     }
-    
-    var noSelectedCityView: some View {
-        VStack {
-            Image.cloudSunImg
-                .resizable()
-                .scaledToFit()
-                .frame(height: 200)
-            Text(viewModel.noCityTitleLabel)
-                .font(.system(size: 36, weight: .bold))
-                .foregroundColor(.white)
-            Text(viewModel.noCitySubtitleLabel)
-                .font(.system(size: 16))
-                .foregroundColor(.white)
-                .opacity(0.6)
-        }
-        .padding(.horizontal, 20)
-    }
-    
-    func ErrorView(error: String) -> some View {
-        VStack {
-            Image.cloudAngryImg
-                .resizable()
-                .scaledToFit()
-                .frame(height: 200)
-            Text(viewModel.errorTitleLabel)
-                .font(.system(size: 36, weight: .bold))
-                .foregroundColor(.white)
-            Text(error)
-                .font(.system(size: 16))
-                .foregroundColor(.white)
-                .opacity(0.6)
-        }
-        .padding(.horizontal, 20)
-    }
-    
-    @ViewBuilder
-    func LandscapeForecastView(_ forecast: Forecast) -> some View {
-        HStack {
-            ForecastHeader(forecast)
-            Spacer()
-            ScrollView(showsIndicators: false) {
-                HStack(spacing: 12) {
-                    if let currentDayForecast = viewModel.currentDayForecast {
-                        ForecastInfoCard(
-                            title: viewModel.averageTitle,
-                            additionalInfo: viewModel.averageTemperatureText,
-                            icon: .chartIcon,
-                            value: viewModel.celsiusLabel(currentDayForecast.averageTemperature.toIntString())
-                        )
-                    }
-                    ForecastInfoCard(
-                        title: viewModel.feelsLikeTitle,
-                        additionalInfo: viewModel.feelsLikeTemperatureText,
-                        icon: .thermometerIcon,
-                        value: viewModel.celsiusLabel(forecast.currentWeather.tempFeelsLike.toIntString())
-                    )
-                }
 
-                ThreeDayForecast(forecast)
-                
-                HStack(spacing: 12) {
-                    ForecastInfoCard(
-                        title: viewModel.uvIndexTitle,
-                        additionalInfo: viewModel.uvIndexText,
-                        icon: .sunMaxIcon,
-                        value: "\(forecast.currentWeather.uvIndex.toIntString())")
-                    ForecastInfoCard(
-                        title: viewModel.humidityTitle,
-                        additionalInfo: viewModel.dewPointText,
-                        icon: .humidityIcon,
-                        value: viewModel.percentageLabel(forecast.currentWeather.humidity))
-                }
-                
-                ForecastWindCard(forecast: forecast)
-            }
+    @ViewBuilder
+    func EventView(title: String, subtitle: String, image: Image) -> some View {
+        VStack {
+            image
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
+            Text(title)
+                .font(.system(size: 36, weight: .bold))
+                .foregroundColor(.white)
+            Text(subtitle)
+                .font(.system(size: 16))
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .opacity(0.6)
+        }
+        .padding(.horizontal, 20)
+        .if(viewModel.isLandscape) { view in
+            view
+                .padding(.bottom, 60)
         }
     }
     
     @ViewBuilder
     func ForecastView(_ forecast: Forecast) -> some View {
-        VStack {
-            ForecastHeader(forecast)
-            ScrollView(showsIndicators: false) {
-                HStack(spacing: 12) {
-                    if let currentDayForecast = viewModel.currentDayForecast {
-                        ForecastInfoCard(
-                            title: viewModel.averageTitle,
-                            additionalInfo: viewModel.averageTemperatureText,
-                            icon: .chartIcon,
-                            value: viewModel.celsiusLabel(currentDayForecast.averageTemperature.toIntString())
-                        )
-                    }
+        ForecastHeader(forecast)
+        Spacer()
+        ScrollView(showsIndicators: false) {
+            HStack(spacing: 12) {
+                if let currentDayForecast = viewModel.currentDayForecast {
                     ForecastInfoCard(
-                        title: viewModel.feelsLikeTitle,
-                        additionalInfo: viewModel.feelsLikeTemperatureText,
-                        icon: .thermometerIcon,
-                        value: viewModel.celsiusLabel(forecast.currentWeather.tempFeelsLike.toIntString())
+                        title: viewModel.averageTitle,
+                        additionalInfo: viewModel.averageTemperatureText,
+                        icon: .chartIcon,
+                        value: viewModel.celsiusLabel(currentDayForecast.averageTemperature.toIntString())
                     )
                 }
-
-                ThreeDayForecast(forecast)
-                
-                HStack(spacing: 12) {
-                    ForecastInfoCard(
-                        title: viewModel.uvIndexTitle,
-                        additionalInfo: viewModel.uvIndexText,
-                        icon: .sunMaxIcon,
-                        value: "\(forecast.currentWeather.uvIndex.toIntString())")
-                    ForecastInfoCard(
-                        title: viewModel.humidityTitle,
-                        additionalInfo: viewModel.dewPointText,
-                        icon: .humidityIcon,
-                        value: viewModel.percentageLabel(forecast.currentWeather.humidity))
-                }
-                
-                ForecastWindCard(forecast: forecast)
+                ForecastInfoCard(
+                    title: viewModel.feelsLikeTitle,
+                    additionalInfo: viewModel.feelsLikeTemperatureText,
+                    icon: .thermometerIcon,
+                    value: viewModel.celsiusLabel(forecast.currentWeather.tempFeelsLike.toIntString())
+                )
             }
+
+            ThreeDayForecast(forecast)
+            
+            HStack(spacing: 12) {
+                ForecastInfoCard(
+                    title: viewModel.uvIndexTitle,
+                    additionalInfo: viewModel.uvIndexText,
+                    icon: .sunMaxIcon,
+                    value: "\(forecast.currentWeather.uvIndex.toIntString())")
+                ForecastInfoCard(
+                    title: viewModel.humidityTitle,
+                    additionalInfo: viewModel.dewPointText,
+                    icon: .humidityIcon,
+                    value: viewModel.percentageLabel(forecast.currentWeather.humidity))
+            }
+            
+            ForecastWindCard(forecast: forecast)
+        }
+    }
+    
+    @ViewBuilder
+    func LandscapeForecastView(_ forecast: Forecast) -> some View {
+        HStack {
+            ForecastView(forecast)
+        }
+    }
+    
+    @ViewBuilder
+    func PortraitForecastView(_ forecast: Forecast) -> some View {
+        VStack {
+            ForecastView(forecast)
         }
     }
     
@@ -335,7 +313,7 @@ extension CityForecastView {
         }
         .padding(.top, 20)
         .padding(.bottom, 40)
-        .if(sizeClass != .compact) { view in
+        .if(viewModel.isLandscape) { view in
             view.frame(width: 250)
         }
     }

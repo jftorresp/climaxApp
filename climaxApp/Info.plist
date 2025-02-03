@@ -4,7 +4,5 @@
 <dict>
 	<key>UIDeviceFamily</key>
 	<true/>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array/>
 </dict>
 </plist>

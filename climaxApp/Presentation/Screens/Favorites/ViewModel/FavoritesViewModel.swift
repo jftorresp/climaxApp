@@ -38,3 +38,22 @@ class FavoritesViewModel: ObservableObject {
         }
     }
 }
+
+extension FavoritesViewModel {
+    var favoritesTitleLabel: String {
+        return "Favorites"
+    }
+    
+    var noFavoritesTitleLabel: String {
+        return "No favorites :("
+    }
+    
+    var noFavoritesSubTitleLabel: String {
+        return "Favorite a city from the search to view it faster."
+    }
+    
+    func latitudeLongitudeLabel(lat: Double, lon: Double) -> String {
+        return "LAT: \(String(format: "%.1f", lat))°, LON: \(String(format: "%.1f", lon))°"
+    }
+    
+}
