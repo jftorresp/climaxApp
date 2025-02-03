@@ -11,7 +11,7 @@ import SwiftUI
 class CityForecastViewModel: ObservableObject {
     private let getForecastUseCase: GetForecastByCityUseCase
     private let favoritesUseCase: FavoritesUseCase
-    @Published var selectedCity: City? = City(id: 2566581, name: "Chicago", region: "Illinois", country: "United States of America", latitude: 41.85, longitude: -87.65, url: "chicago-illinois-united-states-of-america")
+    @Published var selectedCity: City?
     @Published var forecast: Forecast?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
