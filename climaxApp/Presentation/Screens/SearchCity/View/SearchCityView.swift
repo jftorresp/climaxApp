@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchCityView: View {
     @Environment(\.presentationMode) var presentationMode
-    @Binding var selectedCity: String
+    @Binding var selectedCity: City?
     @StateObject var viewModel: SearchCityViewModel
     
     var body: some View {
@@ -105,7 +105,7 @@ extension SearchCityView {
             LazyVStack(alignment: .leading, spacing: 10) {
                 ForEach(viewModel.cities, id: \.id) { city in
                     Button {
-                        self.selectedCity = city.name
+                        self.selectedCity = city
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         Text("\(city.name), \(city.country)")
@@ -120,5 +120,18 @@ extension SearchCityView {
 }
 
 #Preview {
-    SearchCityView(selectedCity: .constant("London"), viewModel: SearchCityViewModel())
+    SearchCityView(
+        selectedCity: .constant(
+            City(
+                id: 1,
+                name: "London",
+                region: "UK",
+                country: "United Kingdom",
+                latitude: 1.34,
+                longitude: 2.5,
+                url: "url"
+            )
+        ),
+        viewModel: SearchCityViewModel()
+    )
 }

@@ -10,10 +10,12 @@ import SwiftUI
 
 class CityForecastViewModel: ObservableObject {
     private let getForecastUseCase: GetForecastByCityUseCase
-    @Published var selectedCity: String = ""
+    private let favoritesUseCase: FavoritesUseCase
+    @Published var selectedCity: City?
     @Published var forecast: Forecast?
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
+    @Published var favoriteCities: [City] = []
     
     var currentTemparature: String {
         guard let forecast else { return "-°" }
@@ -65,17 +67,20 @@ class CityForecastViewModel: ObservableObject {
         return "The dew point is \(forecast.currentWeather.dewPoint.toIntString())°"
     }
     
-    init(getForecastUseCase: GetForecastByCityUseCase = GetForecastByCityUseCaseImpl()) {
+    init(getForecastUseCase: GetForecastByCityUseCase = GetForecastByCityUseCaseImpl(), favoritesUseCase: FavoritesUseCase = FavoritesUseCaseImpl()) {
         self.getForecastUseCase = getForecastUseCase
+        self.favoritesUseCase = favoritesUseCase
     }
     
     @MainActor
     func getForecast() async throws {
-        self.isLoading = true
         do {
-            self.forecast = try await getForecastUseCase.execute(selectedCity)
-            self.isLoading = false
-            self.errorMessage = nil
+            if let selectedCity = selectedCity {
+                self.isLoading = true
+                self.forecast = try await getForecastUseCase.execute(selectedCity.name)
+                self.isLoading = false
+                self.errorMessage = nil
+            }
         } catch DomainError.noLocationFound {
             self.errorMessage = "No location found."
             self.isLoading = false
@@ -113,6 +118,49 @@ class CityForecastViewModel: ObservableObject {
         weekdayFormatter.dateFormat = "EEE"
         
         return weekdayFormatter.string(from: date)
+    }
+}
+
+// MARK: Favorites functions
+
+extension CityForecastViewModel {
+    func addToFavorites(_ city: City) {
+        do {
+            try favoritesUseCase.saveFavoriteCity(city)
+            loadFavoriteCities()
+        } catch {
+            self.errorMessage = "Error adding city to favorites"
+        }
+    }
+    
+    func removeFromFavorites(_ city: City) {
+        do {
+            try favoritesUseCase.deleteFavoriteCity(city)
+            loadFavoriteCities()
+        } catch {
+            self.errorMessage = "An error ocurred deleting that city, Try again later."
+        }
+    }
+    
+    func loadFavoriteCities() {
+        do {
+            self.isLoading = true
+            favoriteCities = try favoritesUseCase.fetchfavoritesCities()
+            self.isLoading = false
+//            if favoriteCities.count > 0, let firstFavorite = favoriteCities.first {
+//                DispatchQueue.main.async {
+//                    self.selectedCity = firstFavorite
+//                    self.isLoading = false
+//                }
+//            }
+        } catch {
+            self.errorMessage = "An error ocurred when trying to fetch favorites. Try again later."
+            self.isLoading = false
+        }
+    }
+    
+    func isFavorite(_ city: City) -> Bool {
+        return favoriteCities.contains { $0.id == city.id }
     }
 }
 

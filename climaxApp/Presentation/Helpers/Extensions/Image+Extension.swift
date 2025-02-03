@@ -26,6 +26,12 @@ extension Image {
     /// Star filled icon
     static let starFillIcon = Image(systemName: "star.fill")
     
+    /// Trash icon
+    static let trashIcon = Image(systemName: "trash")
+    
+    /// Trashfill  icon
+    static let trashFillIcon = Image(systemName: "trash.fill")
+    
     /// Cloud icon
     static let cloudIcon = Image(systemName: "cloud.fill")
     

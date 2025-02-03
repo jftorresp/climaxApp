@@ -10,6 +10,7 @@ import SwiftUI
 struct FavoritesView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel: FavoritesViewModel
+    @Binding var selectedFavoriteCity: City?
     
     var body: some View {
         content
@@ -26,6 +27,24 @@ struct FavoritesView: View {
                             .frame(height: 16)
                     }
                 }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        withAnimation {
+                            viewModel.deleteMode.toggle()
+                        }
+                    } label: {
+                        Image.trashFillIcon
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 20)
+                    }
+                }
+            }
+            .onAppear {
+                viewModel.loadFavoriteCities()
             }
     }
     
@@ -42,7 +61,14 @@ struct FavoritesView: View {
                 if viewModel.favoriteCities.isEmpty {
                     noFavoritesView
                 } else {
-                    EmptyView()
+                    ScrollView {
+                        LazyVStack(alignment: .leading) {
+                            ForEach(viewModel.favoriteCities, id: \.id) { city in
+                                FavoriteCityView(city)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                    }
                 }
             }
             .navigationBarBackButtonHidden(true)
@@ -74,8 +100,68 @@ extension FavoritesView {
             Spacer()
         }
     }
+    
+    @ViewBuilder
+    func FavoriteCityView(_ city: City) -> some View {
+        Button {
+            self.selectedFavoriteCity = city
+            presentationMode.wrappedValue.dismiss()
+        } label: {
+            VStack(alignment: .leading) {
+                VStack(alignment: .leading) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading) {
+                            Text(city.name)
+                                .font(.system(size: 24, weight: .bold))
+                                .foregroundColor(.white)
+                            Text(city.country)
+                                .font(.system(size: 14))
+                                .foregroundColor(.white)
+                        }
+                        Spacer()
+                        Image.starFillIcon
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 20)
+                    }
+
+                    HStack {
+                        Spacer()
+                        Text("LAT:\(String(format: "%.1f", city.latitude))°, LON:\(String(format: "%.1f", city.longitude))°")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(.white)
+                            .shadow(radius: 5)
+                    }
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+            }
+            .background(Color.brandDarkBlue)
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+            
+            if viewModel.deleteMode {
+                Button {
+                    viewModel.removeFromFavorites(city)
+                } label: {
+                    VStack(alignment: .leading) {
+                        Image.trashIcon
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 20)
+                            .padding(12)
+                    }
+                    .background(Color.brandDarkBlue)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            }
+        }
+    }
 }
 
 #Preview {
-    FavoritesView(viewModel: FavoritesViewModel())
+    FavoritesView(viewModel: FavoritesViewModel(), selectedFavoriteCity: .constant(nil))
 }

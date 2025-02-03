@@ -27,6 +27,7 @@ enum HTTPError: Error {
 
 enum DataError: Error {
     case apiError(code: Int, message: String)
+    case unkwownError(message: String)
 }
 
 struct ErrorData: Decodable {

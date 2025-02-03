@@ -26,36 +26,9 @@ struct CityForecastView: View {
         NavigationView {
             content
                 .onAppear {
+                    viewModel.loadFavoriteCities()
                     Task {
                         try await viewModel.getForecast()
-                    }
-                }
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink {
-                            SearchCityView(selectedCity: $viewModel.selectedCity, viewModel: SearchCityViewModel())
-                        } label: {
-                            Image.searchIcon
-                                .resizable()
-                                .renderingMode(.template)
-                                .scaledToFit()
-                                .foregroundColor(.white)
-                                .frame(width: 20)
-                        }
-                    }
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            
-                        } label: {
-                            if !viewModel.selectedCity.isEmpty {
-                                Image.starIcon
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .scaledToFit()
-                                    .foregroundColor(.white)
-                                    .frame(width: 20)
-                            }
-                        }
                     }
                 }
         }
@@ -67,25 +40,36 @@ struct CityForecastView: View {
             Color.brandBlue
                 .ignoresSafeArea(.all)
             VStack {
-                if viewModel.selectedCity.isEmpty {
+                if !viewModel.isLoading {
+                    topBarView
+                }
+                
+                if viewModel.isLoading {
+                    Spacer()
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
+                        .scaleEffect(1.5)
+                    Spacer()
+                }
+                
+                if viewModel.selectedCity == nil {
+                    Spacer()
                     noSelectedCityView
+                    Spacer()
                 } else {
-                    if viewModel.isLoading {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
-                            .scaleEffect(1.5)
-                    } else {
-                        if let forecast = viewModel.forecast {
-                            ForecastView(forecast)
-                        }
+                    if let forecast = viewModel.forecast {
+                        ForecastView(forecast)
                     }
-                    if let errorMessage = viewModel.errorMessage {
-                        ErrorView(error: errorMessage)
-                    }
+                }
+                
+                if let errorMessage = viewModel.errorMessage {
+                    Spacer()
+                    ErrorView(error: errorMessage)
+                    Spacer()
                 }
             }
             .padding(.horizontal, 20)
-
+            
             bottomBarView
         }
     }
@@ -94,6 +78,50 @@ struct CityForecastView: View {
 // MARK: Subviews
 
 extension CityForecastView {
+    var topBarView: some View {
+        HStack {
+            Button {
+                if let selectedCity = viewModel.selectedCity {
+                    if viewModel.isFavorite(selectedCity) {
+                        viewModel.removeFromFavorites(selectedCity)
+                    } else {
+                        viewModel.addToFavorites(selectedCity)
+                    }
+                }
+            } label: {
+                if let selectedCity = viewModel.selectedCity {
+                    if viewModel.isFavorite(selectedCity) {
+                        Image.starFillIcon
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 20)
+                    } else {
+                        Image.starIcon
+                            .resizable()
+                            .renderingMode(.template)
+                            .scaledToFit()
+                            .foregroundColor(.white)
+                            .frame(width: 20)
+                    }
+                }
+            }
+            Spacer()
+            
+            NavigationLink {
+                SearchCityView(selectedCity: $viewModel.selectedCity, viewModel: SearchCityViewModel())
+            } label: {
+                Image.searchIcon
+                    .resizable()
+                    .renderingMode(.template)
+                    .scaledToFit()
+                    .foregroundColor(.white)
+                    .frame(width: 20)
+            }
+        }
+    }
+    
     var bottomBarView: some View {
         VStack {
             Rectangle()
@@ -122,7 +150,7 @@ extension CityForecastView {
                 Spacer()
                 
                 NavigationLink {
-                    FavoritesView(viewModel: FavoritesViewModel())
+                    FavoritesView(viewModel: FavoritesViewModel(), selectedFavoriteCity: $viewModel.selectedCity)
                 } label: {
                     Image.starSquareIcon
                         .resizable()
@@ -353,7 +381,7 @@ extension CityForecastView {
             Text(viewModel.celsiusLabel(forecast.minTemperature.toIntString()))
                 .font(.system(size: 16))
                 .foregroundColor(.white)
-            ProgressView(value: forecast.averageTemperature, total: forecast.maxTemperature)
+            ProgressView(value: max(min(forecast.averageTemperature, forecast.maxTemperature), 0), total: forecast.maxTemperature)
                 .foregroundColor(.yellow)
             Text(viewModel.celsiusLabel(forecast.maxTemperature.toIntString()))
                 .font(.system(size: 16))

@@ -18,4 +18,8 @@ enum DomainError: Error {
     case disabledAPIKey
     case serverError(message: String)
     case unexpectedError(message: String)
+    
+    case savingError(message: String)
+    case fetchingError(message: String)
+    case deletingError(message: String)
 }
