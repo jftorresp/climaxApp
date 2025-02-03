@@ -41,10 +41,23 @@ struct SearchCityView: View {
 extension SearchCityView {
     var searchHeaderView: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(viewModel.searchTitleLabel)
-                .font(.system(size: 36, weight: .bold))
-                .foregroundColor(.white)
-                .padding(.horizontal, 20)
+            HStack {
+                Text(viewModel.searchTitleLabel)
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundColor(.white)
+                Spacer()
+                NavigationLink {
+                    FavoritesView(viewModel: FavoritesViewModel(), selectedFavoriteCity: .constant(nil))
+                } label: {
+                    Image.starSquareIcon
+                        .resizable()
+                        .renderingMode(.template)
+                        .scaledToFit()
+                        .foregroundColor(.white)
+                        .frame(width: 20)
+                }
+            }
+            .padding(.horizontal, 20)
             
             SearchBarView(searchtext: $viewModel.searchText)
                 .onChange(of: viewModel.searchText) { newValue in
