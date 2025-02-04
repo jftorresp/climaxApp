@@ -141,7 +141,7 @@ extension FavoritesView {
     func FavoriteCityView(_ city: City) -> some View {
         Button {
             self.selectedFavoriteCity = city
-            presentationMode.wrappedValue.dismiss()
+            popToRoot()
         } label: {
             VStack(alignment: .leading) {
                 VStack(alignment: .leading) {
@@ -195,6 +195,31 @@ extension FavoritesView {
                 }
             }
         }
+    }
+}
+
+extension FavoritesView {
+    private func popToRoot() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootViewController = windowScene.windows.first?.rootViewController else {
+            return
+        }
+
+        if let navigationController = findNavigationController(rootViewController) {
+            navigationController.popToRootViewController(animated: true)
+        }
+    }
+
+    private func findNavigationController(_ vc: UIViewController) -> UINavigationController? {
+        if let nav = vc as? UINavigationController {
+            return nav
+        }
+        for child in vc.children {
+            if let nav = findNavigationController(child) {
+                return nav
+            }
+        }
+        return nil
     }
 }
 
