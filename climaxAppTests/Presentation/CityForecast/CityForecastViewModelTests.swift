@@ -31,7 +31,7 @@ final class CityForecastViewModelTests: XCTestCase {
 
     func testGetForecast_Success() async throws {
         // Given
-        let city = City.mockCity
+        let city = City.mockChicagoCity
         viewModel.selectedCity = city
 
         // When
@@ -46,7 +46,7 @@ final class CityForecastViewModelTests: XCTestCase {
     func testGetForecast_Failure() async throws {
         // Given
         mockGetForecastUseCase.shouldThrowError = true
-        viewModel.selectedCity = City.mockCity
+        viewModel.selectedCity = City.mockChicagoCity
 
         // When
         try await viewModel.getForecast()
@@ -60,7 +60,7 @@ final class CityForecastViewModelTests: XCTestCase {
 
     func testAddToFavorites() {
         // Given
-        let city = City.mockCity
+        let city = City.mockChicagoCity
 
         // When
         viewModel.addToFavorites(city)
@@ -71,7 +71,7 @@ final class CityForecastViewModelTests: XCTestCase {
     
     func testRemoveFromFavorites() {
         // Given
-        let city = City.mockCity
+        let city = City.mockChicagoCity
         viewModel.addToFavorites(city)
 
         // When
