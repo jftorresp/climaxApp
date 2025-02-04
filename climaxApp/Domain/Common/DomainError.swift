@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DomainError: Error {
+enum DomainError: Error, Equatable {
     ///  Error code 1003: Parameter 'q' not provided.
     case parameterNotProvided
     ///  Error code 1006: No location found matching parameter 'q'
