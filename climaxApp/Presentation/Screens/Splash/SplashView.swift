@@ -10,6 +10,10 @@ import SwiftUI
 struct SplashView: View {
     @State var isActive = false
     
+    var appName: String {
+        return "Climax."
+    }
+    
     var body: some View {
         if isActive {
             CityForecastView(viewModel: CityForecastViewModel())
@@ -21,7 +25,7 @@ struct SplashView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 200)
-                    Text("Climax.")
+                    Text(appName)
                         .foregroundColor(.white)
                         .font(.system(size: 40))
                         .fontWeight(.bold)

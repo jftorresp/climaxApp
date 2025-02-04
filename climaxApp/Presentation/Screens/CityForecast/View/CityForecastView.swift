@@ -47,7 +47,7 @@ struct CityForecastView: View {
                         topBarView
                             .if(viewModel.isLandscape, transform: { view in
                                 view
-                                    .padding(.top, 30)
+                                    .padding(.top, Constants.GeneralSizing.landscapeTopPadding)
                             })
                     }
                     
@@ -83,7 +83,7 @@ struct CityForecastView: View {
                         Spacer()
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, Sizing.small.rawValue)
                 
                 bottomBarView
             }
@@ -101,7 +101,7 @@ extension CityForecastView {
     var loadingView: some View {
         ProgressView()
             .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
-            .scaleEffect(1.5)
+            .scaleEffect(Constants.GeneralSizing.progressScaleEffect)
     }
     
     var topBarView: some View {
@@ -122,14 +122,14 @@ extension CityForecastView {
                             .renderingMode(.template)
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 20)
+                            .frame(width: Constants.CityForecast.smallIconWidth)
                     } else {
                         Image.starIcon
                             .resizable()
                             .renderingMode(.template)
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 20)
+                            .frame(width: Constants.CityForecast.smallIconWidth)
                     }
                 }
             }
@@ -143,7 +143,7 @@ extension CityForecastView {
                     .renderingMode(.template)
                     .scaledToFit()
                     .foregroundColor(.white)
-                    .frame(width: 20)
+                    .frame(width: Constants.CityForecast.smallIconWidth)
             }
         }
     }
@@ -152,8 +152,8 @@ extension CityForecastView {
         VStack {
             if !viewModel.isLandscape {
                 Rectangle()
-                    .foregroundColor(.white.opacity(0.5))
-                    .frame(height: 1)
+                    .foregroundColor(.white.opacity(Constants.CityForecast.rectangleOpacity))
+                    .frame(height: Sizing.xxxxTiny.rawValue)
             }
             HStack {
                 NavigationLink {
@@ -164,7 +164,7 @@ extension CityForecastView {
                         .renderingMode(.template)
                         .scaledToFit()
                         .foregroundColor(.white)
-                        .frame(width: 20)
+                        .frame(width: Constants.CityForecast.smallIconWidth)
                 }
                 .disabled(true)
 
@@ -173,7 +173,7 @@ extension CityForecastView {
                 Image.appLongLogo
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 120)
+                    .frame(width: Constants.CityForecast.appLongLogoWidth)
                 
                 Spacer()
                 
@@ -185,18 +185,18 @@ extension CityForecastView {
                         .renderingMode(.template)
                         .scaledToFit()
                         .foregroundColor(.white)
-                        .frame(width: 20)
+                        .frame(width: Constants.CityForecast.smallIconWidth)
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.top, 12)
-            .padding(.bottom, !viewModel.isLandscape ? 50 : 12)
-            .padding(.horizontal, 20)
+            .padding(.top, Sizing.xxxxSmall.rawValue)
+            .padding(.bottom, !viewModel.isLandscape ? Constants.CityForecast.bottomBarPortraitPadding : Sizing.xxxxSmall.rawValue)
+            .padding(.horizontal, Sizing.small.rawValue)
         }
-        .background(Color.darkBlue.opacity(!viewModel.isLandscape ? 1 : 0.7))
+        .background(Color.darkBlue.opacity(!viewModel.isLandscape ? Constants.CityForecast.portraitBgOpacity : Constants.CityForecast.landscapeBgOpacity))
         .if(viewModel.isLandscape) { view in
             view
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: Sizing.small.rawValue))
         }
         .frame(maxHeight: .infinity, alignment: .bottom)
         .if(!viewModel.isLandscape) { frame in
@@ -211,20 +211,20 @@ extension CityForecastView {
             image
                 .resizable()
                 .scaledToFit()
-                .frame(width: 200)
+                .frame(width: Constants.CityForecast.eventImageWidth)
             Text(title)
-                .font(.system(size: 36, weight: .bold))
+                .font(.system(size: FontSize.p36.rawValue, weight: .bold))
                 .foregroundColor(.white)
             Text(subtitle)
-                .font(.system(size: 16))
+                .font(.system(size: FontSize.p16.rawValue))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
-                .opacity(0.6)
+                .opacity(Constants.CityForecast.textOpacity)
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, Sizing.small.rawValue)
         .if(viewModel.isLandscape) { view in
             view
-                .padding(.bottom, 60)
+                .padding(.bottom, Constants.CityForecast.eventLandscapeBottomPadding)
         }
     }
     
@@ -233,7 +233,7 @@ extension CityForecastView {
         ForecastHeader(forecast)
         Spacer()
         ScrollView(showsIndicators: false) {
-            HStack(spacing: 12) {
+            HStack(spacing: Sizing.xxxxSmall.rawValue) {
                 if let currentDayForecast = viewModel.currentDayForecast {
                     ForecastInfoCard(
                         title: viewModel.averageTitle,
@@ -252,7 +252,7 @@ extension CityForecastView {
 
             ThreeDayForecast(forecast)
             
-            HStack(spacing: 12) {
+            HStack(spacing: Sizing.xxxxSmall.rawValue) {
                 ForecastInfoCard(
                     title: viewModel.uvIndexTitle,
                     additionalInfo: viewModel.uvIndexText,
@@ -287,34 +287,34 @@ extension CityForecastView {
     func ForecastHeader(_ forecast: Forecast) -> some View {
         VStack {
             Text(forecast.name)
-                .font(.system(size: 36))
+                .font(.system(size: FontSize.p36.rawValue))
                 .foregroundColor(.white)
-                .shadow(radius: 5)
+                .shadow(radius: Constants.CityForecast.shadowRadius)
             Text(viewModel.celsiusLabel(viewModel.currentTemparature))
-                .font(.system(size: 90, weight: .thin))
+                .font(.system(size: FontSize.p90.rawValue, weight: .thin))
                 .foregroundColor(.white)
-                .shadow(radius: 5)
+                .shadow(radius: Constants.CityForecast.shadowRadius)
             Text("\(forecast.currentWeather.condition)")
-                .font(.system(size: 20, weight: .medium))
+                .font(.system(size: FontSize.p20.rawValue, weight: .medium))
                 .foregroundColor(.lightYellow)
             
             if let currentDayForecast = viewModel.currentDayForecast {
                 HStack {
                     Text(viewModel.maxTempLabel(currentDayForecast.maxTemperature.toIntString()))
-                        .font(.system(size: 20))
+                        .font(.system(size: FontSize.p20.rawValue))
                         .foregroundColor(.white)
-                        .shadow(radius: 5)
+                        .shadow(radius: Constants.CityForecast.shadowRadius)
                     Text(viewModel.minTempLabel(currentDayForecast.minTemperature.toIntString()))
-                        .font(.system(size: 20))
+                        .font(.system(size: FontSize.p20.rawValue))
                         .foregroundColor(.white)
-                        .shadow(radius: 5)
+                        .shadow(radius: Constants.CityForecast.shadowRadius)
                 }
             }
         }
-        .padding(.top, 20)
-        .padding(.bottom, 40)
+        .padding(.top, Sizing.small.rawValue)
+        .padding(.bottom, Sizing.large.rawValue)
         .if(viewModel.isLandscape) { view in
-            view.frame(width: 250)
+            view.frame(width: Constants.CityForecast.headerLandscapeWidth)
         }
     }
     
@@ -328,27 +328,27 @@ extension CityForecastView {
                         .renderingMode(.template)
                         .foregroundColor(.white)
                         .scaledToFit()
-                        .frame(height: 12)
+                        .frame(height: Constants.CityForecast.headerCardImageHeight)
                     Text(title)
-                        .font(.system(size: 12))
+                        .font(.system(size: FontSize.p12.rawValue))
                         .foregroundColor(.white)
                 }
-                .opacity(0.5)
+                .opacity(Constants.CityForecast.rectangleOpacity)
                 Text(value)
-                    .font(.system(size: 36))
+                    .font(.system(size: FontSize.p36.rawValue))
                     .foregroundColor(.white)
                 if let additionalInfo = additionalInfo {
                     Text(additionalInfo)
-                        .font(.system(size: 14))
+                        .font(.system(size: FontSize.p14.rawValue))
                         .foregroundColor(.white)
                 }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 16)
+            .padding(.vertical, Sizing.small.rawValue)
+            .padding(.horizontal, Sizing.xxSmall.rawValue)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.brandDarkBlue)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: Constants.CityForecast.cardCornerRadius))
     }
     
     @ViewBuilder
@@ -360,36 +360,36 @@ extension CityForecastView {
                         .resizable()
                         .renderingMode(.template)
                         .foregroundColor(.white)
-                        .opacity(0.5)
+                        .opacity(Constants.CityForecast.forecastIconOpacity)
                         .scaledToFit()
-                        .frame(width: 16)
+                        .frame(width: Constants.CityForecast.forecastIconWidth)
                     Text(viewModel.threeDayForecastLabel)
                         .foregroundColor(.white)
-                        .opacity(0.5)
+                        .opacity(Constants.CityForecast.forecastIconOpacity)
                 }
                 Rectangle()
-                    .frame(height: 1)
-                    .foregroundColor(.white.opacity(0.3))
+                    .frame(height: Sizing.xxxxTiny.rawValue)
+                    .foregroundColor(.white.opacity(Constants.CityForecast.forecastRectangleOpacity))
                 
                 VStack(alignment: .leading) {
                     ForEach(Array(forecast.forecast.enumerated()), id: \.offset) { index, forecastDay in
                         VStack {
                             HStack {
                                 Text("\(viewModel.getWeekdayLabel(from: forecastDay.date))")
-                                    .font(.system(size: 20))
+                                    .font(.system(size: FontSize.p20.rawValue))
                                     .foregroundColor(.white)
-                                    .frame(width: 70, alignment: .leading)
+                                    .frame(width: Constants.CityForecast.weekdayWidth, alignment: .leading)
                                 VStack {
                                     viewModel.cloudRainIcon(forecast: forecastDay)
                                         .resizable()
                                         .renderingMode(.template)
                                         .foregroundColor(.white)
                                         .scaledToFit()
-                                        .frame(width: 22)
-                                        .padding(.horizontal, 16)
+                                        .frame(width: Constants.CityForecast.cloudWidth)
+                                        .padding(.horizontal, Sizing.xxSmall.rawValue)
                                     if forecastDay.chanceOfRain > 0 {
                                         Text(viewModel.percentageLabel(forecastDay.chanceOfRain))
-                                            .font(.system(size: 12))
+                                            .font(.system(size: FontSize.p12.rawValue))
                                             .foregroundColor(.white)
                                     }
                                 }
@@ -397,34 +397,34 @@ extension CityForecastView {
                                 TemperatureRangePerDay(forecast: forecastDay)
                                 
                             }
-                            .padding(.top, 6)
+                            .padding(.top, Sizing.xxTiny.rawValue)
                             .frame(maxWidth: .infinity)
                             if index < forecast.forecast.count - 1 {
                                 Rectangle()
-                                    .frame(height: 1)
-                                    .foregroundColor(.white.opacity(0.3))
+                                    .frame(height: Sizing.xxxxTiny.rawValue)
+                                    .foregroundColor(.white.opacity(Constants.CityForecast.forecastRectangleOpacity))
                             }
                         }
                     }
                 }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 16)
+            .padding(.vertical, Sizing.xxxxSmall.rawValue)
+            .padding(.horizontal, Sizing.xxSmall.rawValue)
         }
         .background(Color.brandDarkBlue)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .clipShape(RoundedRectangle(cornerRadius: Constants.CityForecast.cardCornerRadius))
     }
     
     @ViewBuilder
     func TemperatureRangePerDay(forecast: ForecastDay) -> some View {
         HStack {
             Text(viewModel.celsiusLabel(forecast.minTemperature.toIntString()))
-                .font(.system(size: 16))
+                .font(.system(size: FontSize.p16.rawValue))
                 .foregroundColor(.white)
             ProgressView(value: max(min(forecast.averageTemperature, forecast.maxTemperature), 0), total: forecast.maxTemperature)
                 .foregroundColor(.yellow)
             Text(viewModel.celsiusLabel(forecast.maxTemperature.toIntString()))
-                .font(.system(size: 16))
+                .font(.system(size: FontSize.p16.rawValue))
                 .foregroundColor(.white)
         }
     }
@@ -439,55 +439,55 @@ extension CityForecastView {
                         .renderingMode(.template)
                         .foregroundColor(.white)
                         .scaledToFit()
-                        .frame(height: 12)
+                        .frame(height: Constants.CityForecast.headerCardImageHeight)
                     Text(viewModel.windTitle)
-                        .font(.system(size: 12))
+                        .font(.system(size: FontSize.p12.rawValue))
                         .foregroundColor(.white)
                 }
-                .opacity(0.5)
+                .opacity(Constants.CityForecast.forecastWindOpacity)
                 
-                VStack(spacing: 16) {
+                VStack(spacing: Sizing.xxSmall.rawValue) {
                     HStack {
                         Text(viewModel.windLabel)
-                            .font(.system(size: 16))
+                            .font(.system(size: FontSize.p16.rawValue))
                             .foregroundColor(.white)
                         Spacer()
                         Text(viewModel.speedItemLabel(forecast.currentWeather.windSpeed.toIntString()))
-                            .font(.system(size: 16))
+                            .font(.system(size: FontSize.p16.rawValue))
                             .foregroundColor(.white)
-                            .opacity(0.5)
+                            .opacity(Constants.CityForecast.forecastWindOpacity)
                     }
                     
                     HStack {
                         Text(viewModel.gustsLabel)
-                            .font(.system(size: 16))
+                            .font(.system(size: FontSize.p16.rawValue))
                             .foregroundColor(.white)
                         Spacer()
                         Text(viewModel.speedItemLabel(forecast.currentWeather.gustSpeed.toIntString()))
-                            .font(.system(size: 16))
+                            .font(.system(size: FontSize.p16.rawValue))
                             .foregroundColor(.white)
-                            .opacity(0.5)
+                            .opacity(Constants.CityForecast.forecastWindOpacity)
                     }
                     
                     HStack {
                         Text(viewModel.windDirectionLabel)
-                            .font(.system(size: 16))
+                            .font(.system(size: FontSize.p16.rawValue))
                             .foregroundColor(.white)
                         Spacer()
                         Text("\(forecast.currentWeather.windDegree)° \(forecast.currentWeather.windDirection)")
-                            .font(.system(size: 16))
+                            .font(.system(size: FontSize.p16.rawValue))
                             .foregroundColor(.white)
-                            .opacity(0.5)
+                            .opacity(Constants.CityForecast.forecastWindOpacity)
                     }
                 }
             }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 16)
+            .padding(.vertical, Sizing.xxxxSmall.rawValue)
+            .padding(.horizontal, Sizing.xxSmall.rawValue)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color.brandDarkBlue)
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .padding(.bottom, 80)
+        .clipShape(RoundedRectangle(cornerRadius: Constants.CityForecast.cardCornerRadius))
+        .padding(.bottom, Constants.CityForecast.contentBottomPadding)
     }
 }
 
