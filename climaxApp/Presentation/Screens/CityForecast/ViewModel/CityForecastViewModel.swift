@@ -19,7 +19,7 @@ class CityForecastViewModel: ObservableObject {
     
     @Published var isLandscape: Bool = false
     
-    var currentTemparature: String {
+    var currentTemperature: String {
         guard let forecast else { return "-°" }
         return forecast.currentWeather.temperature.toIntString()
     }

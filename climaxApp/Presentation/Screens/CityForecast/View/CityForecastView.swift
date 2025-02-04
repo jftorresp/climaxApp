@@ -290,7 +290,7 @@ extension CityForecastView {
                 .font(.system(size: FontSize.p36.rawValue))
                 .foregroundColor(.white)
                 .shadow(radius: Constants.GeneralSizing.shadowRadius)
-            Text(viewModel.celsiusLabel(viewModel.currentTemparature))
+            Text(viewModel.celsiusLabel(viewModel.currentTemperature))
                 .font(.system(size: FontSize.p90.rawValue, weight: .thin))
                 .foregroundColor(.white)
                 .shadow(radius: Constants.GeneralSizing.shadowRadius)

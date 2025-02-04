@@ -13,12 +13,12 @@ struct Forecast {
     let country: String
     let latitude: Double
     let longitude: Double
-    let currentWeather: ForecastCurrentWeather
+    var currentWeather: ForecastCurrentWeather
     let forecast: [ForecastDay]
 }
 
 struct ForecastCurrentWeather {
-    let temperature: Double
+    var temperature: Double
     let condition: String
     let conditionIcon: String
     let windSpeed: Double
@@ -27,11 +27,11 @@ struct ForecastCurrentWeather {
     let pressure: Double
     let humidity: Int
     let cloudiness: Int
-    let tempFeelsLike: Double
+    var tempFeelsLike: Double
     let windChill: Double
     let heatIndex: Double
     let dewPoint: Double
-    let uvIndex: Double
+    var uvIndex: Double
     let gustSpeed: Double
 }
 
