@@ -24,11 +24,11 @@ struct SearchCityView: View {
             ZStack {
                 Color.brandBlue
                     .ignoresSafeArea(.all)
-                VStack(alignment: .leading, spacing: 10) {
+                VStack(alignment: .leading, spacing: Sizing.tiny.rawValue) {
                     searchHeaderView
                         .if(isLandscape, transform: { view in
                             view
-                                .padding(.top, 20)
+                                .padding(.top, Sizing.small.rawValue)
                         })
                     
                     if viewModel.searchText.isEmpty {
@@ -53,10 +53,10 @@ struct SearchCityView: View {
 
 extension SearchCityView {
     var searchHeaderView: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: Sizing.tiny.rawValue) {
             HStack {
                 Text(viewModel.searchTitleLabel)
-                    .font(.system(size: 36, weight: .bold))
+                    .font(.system(size: FontSize.p36.rawValue, weight: .bold))
                     .foregroundColor(.white)
                 Spacer()
                 NavigationLink {
@@ -67,10 +67,10 @@ extension SearchCityView {
                         .renderingMode(.template)
                         .scaledToFit()
                         .foregroundColor(.white)
-                        .frame(width: 20)
+                        .frame(width: Constants.SearchCity.smallIconWidth)
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Sizing.small.rawValue)
             
             SearchBarView(searchtext: $viewModel.searchText)
                 .onChange(of: viewModel.searchText) { newValue in
@@ -82,45 +82,45 @@ extension SearchCityView {
     }
     
     var noSearchView: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: Sizing.tiny.rawValue) {
             Spacer()
             VStack {
                 Image.sunImg
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 250)
+                    .frame(width: Constants.SearchCity.noSearchImageWidth)
                 Text(viewModel.noSearchTitleLabel)
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.system(size: FontSize.p32.rawValue, weight: .bold))
                     .foregroundColor(.white)
                 Text(viewModel.noSearchSubTitleLabel)
-                    .font(.system(size: 18))
-                    .foregroundColor(.white.opacity(0.5))
+                    .font(.system(size: FontSize.p18.rawValue))
+                    .foregroundColor(.white.opacity(Constants.SearchCity.opacity))
                     .multilineTextAlignment(.center)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Sizing.small.rawValue)
             .frame(maxWidth: .infinity, alignment: .center)
             Spacer()
         }
     }
     
     var noResultsView: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: Sizing.tiny.rawValue) {
             Spacer()
             VStack {
                 Image.searchIcon
                     .resizable()
                     .renderingMode(.template)
                     .scaledToFit()
-                    .foregroundColor(.white.opacity(0.5))
-                    .frame(width: 60)
+                    .foregroundColor(.white.opacity(Constants.SearchCity.opacity))
+                    .frame(width: Constants.SearchCity.noResultsImageWidth)
                 Text(viewModel.noResultsTitleLabel)
-                    .font(.system(size: 24, weight: .bold))
+                    .font(.system(size: FontSize.p24.rawValue, weight: .bold))
                     .foregroundColor(.white)
                 Text(viewModel.noResultsSubTitleLabel)
-                    .font(.system(size: 18))
-                    .foregroundColor(.white.opacity(0.5))
+                    .font(.system(size: FontSize.p18.rawValue))
+                    .foregroundColor(.white.opacity(Constants.SearchCity.opacity))
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Sizing.small.rawValue)
             .frame(maxWidth: .infinity, alignment: .center)
             Spacer()
         }
@@ -128,7 +128,7 @@ extension SearchCityView {
     
     var searchResultsView: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 10) {
+            LazyVStack(alignment: .leading, spacing: Sizing.tiny.rawValue) {
                 ForEach(viewModel.cities, id: \.id) { city in
                     Button {
                         self.selectedCity = city
@@ -140,7 +140,7 @@ extension SearchCityView {
                     }
                 }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, Sizing.xxSmall.rawValue)
         }
     }
 }

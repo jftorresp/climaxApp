@@ -289,11 +289,11 @@ extension CityForecastView {
             Text(forecast.name)
                 .font(.system(size: FontSize.p36.rawValue))
                 .foregroundColor(.white)
-                .shadow(radius: Constants.CityForecast.shadowRadius)
+                .shadow(radius: Constants.GeneralSizing.shadowRadius)
             Text(viewModel.celsiusLabel(viewModel.currentTemparature))
                 .font(.system(size: FontSize.p90.rawValue, weight: .thin))
                 .foregroundColor(.white)
-                .shadow(radius: Constants.CityForecast.shadowRadius)
+                .shadow(radius: Constants.GeneralSizing.shadowRadius)
             Text("\(forecast.currentWeather.condition)")
                 .font(.system(size: FontSize.p20.rawValue, weight: .medium))
                 .foregroundColor(.lightYellow)
@@ -303,11 +303,11 @@ extension CityForecastView {
                     Text(viewModel.maxTempLabel(currentDayForecast.maxTemperature.toIntString()))
                         .font(.system(size: FontSize.p20.rawValue))
                         .foregroundColor(.white)
-                        .shadow(radius: Constants.CityForecast.shadowRadius)
+                        .shadow(radius: Constants.GeneralSizing.shadowRadius)
                     Text(viewModel.minTempLabel(currentDayForecast.minTemperature.toIntString()))
                         .font(.system(size: FontSize.p20.rawValue))
                         .foregroundColor(.white)
-                        .shadow(radius: Constants.CityForecast.shadowRadius)
+                        .shadow(radius: Constants.GeneralSizing.shadowRadius)
                 }
             }
         }

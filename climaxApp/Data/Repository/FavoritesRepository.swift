@@ -33,7 +33,6 @@ class FavoritesRepositoryImpl: FavoritesRepository {
             return try dataSource.fetchfavoritesCities()
         } catch {
             throw DomainError.fetchingError(message: error.localizedDescription)
-            return []
         }
     }
     

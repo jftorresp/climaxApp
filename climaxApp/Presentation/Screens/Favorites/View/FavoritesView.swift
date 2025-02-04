@@ -59,12 +59,12 @@ struct FavoritesView: View {
 extension FavoritesView {
     var favoritesHeaderView: some View {
         Text(viewModel.favoritesTitleLabel)
-            .font(.system(size: 36, weight: .bold))
+            .font(.system(size: FontSize.p36.rawValue, weight: .bold))
             .foregroundColor(.white)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Sizing.small.rawValue)
             .if(isLandscape, transform: { view in
                 view
-                    .padding(.top, 10)
+                    .padding(.top, Sizing.tiny.rawValue)
             })
     }
     
@@ -77,10 +77,10 @@ extension FavoritesView {
                 .renderingMode(.template)
                 .scaledToFit()
                 .foregroundColor(.white)
-                .frame(height: 16)
+                .frame(height: Constants.Favorites.backButtonIconHeight)
                 .if(isLandscape, transform: { view in
                     view
-                        .padding(.top, 30)
+                        .padding(.top, Constants.GeneralSizing.landscapeTopPadding)
                 })
         }
     }
@@ -96,31 +96,31 @@ extension FavoritesView {
                 .renderingMode(.template)
                 .scaledToFit()
                 .foregroundColor(.white)
-                .frame(height: 20)
+                .frame(height: Constants.Favorites.trashIconHeight)
                 .if(isLandscape, transform: { view in
                     view
-                        .padding(.top, 30)
+                        .padding(.top, Constants.GeneralSizing.landscapeTopPadding)
                 })
         }
     }
     
     var noFavoritesView: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: Sizing.tiny.rawValue) {
             Spacer()
             VStack {
                 Image.cloudRainImg
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 250)
+                    .frame(width: Constants.Favorites.noFavoritesImageWidth)
                 Text(viewModel.noFavoritesTitleLabel)
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.system(size: FontSize.p32.rawValue, weight: .bold))
                     .foregroundColor(.white)
                 Text(viewModel.noFavoritesSubTitleLabel)
-                    .font(.system(size: 18))
-                    .foregroundColor(.white.opacity(0.5))
+                    .font(.system(size: FontSize.p18.rawValue))
+                    .foregroundColor(.white.opacity(Constants.Favorites.opacity))
                     .multilineTextAlignment(.center)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Sizing.small.rawValue)
             .frame(maxWidth: .infinity, alignment: .center)
             Spacer()
         }
@@ -133,7 +133,7 @@ extension FavoritesView {
                     FavoriteCityView(city)
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, Sizing.small.rawValue)
         }
     }
     
@@ -148,10 +148,10 @@ extension FavoritesView {
                     HStack(alignment: .top) {
                         VStack(alignment: .leading) {
                             Text(city.name)
-                                .font(.system(size: 24, weight: .bold))
+                                .font(.system(size: FontSize.p24.rawValue, weight: .bold))
                                 .foregroundColor(.white)
                             Text(city.country)
-                                .font(.system(size: 14))
+                                .font(.system(size: FontSize.p14.rawValue))
                                 .foregroundColor(.white)
                         }
                         Spacer()
@@ -160,22 +160,22 @@ extension FavoritesView {
                             .renderingMode(.template)
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 20)
+                            .frame(width: Constants.Favorites.smallIconWidth)
                     }
 
                     HStack {
                         Spacer()
                         Text(viewModel.latitudeLongitudeLabel(lat: city.latitude, lon: city.longitude))
-                            .font(.system(size: 14, weight: .medium))
+                            .font(.system(size: FontSize.p14.rawValue, weight: .medium))
                             .foregroundColor(.white)
-                            .shadow(radius: 5)
+                            .shadow(radius: Constants.GeneralSizing.shadowRadius)
                     }
                 }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 16)
+                .padding(.vertical, Sizing.xxxxSmall.rawValue)
+                .padding(.horizontal, Sizing.xxSmall.rawValue)
             }
             .background(Color.brandDarkBlue)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+            .clipShape(RoundedRectangle(cornerRadius: Sizing.xxSmall.rawValue))
             
             if viewModel.deleteMode {
                 Button {
@@ -187,11 +187,11 @@ extension FavoritesView {
                             .renderingMode(.template)
                             .scaledToFit()
                             .foregroundColor(.white)
-                            .frame(width: 20)
-                            .padding(12)
+                            .frame(width: Constants.Favorites.smallIconWidth)
+                            .padding(Sizing.xxxxSmall.rawValue)
                     }
                     .background(Color.brandDarkBlue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .clipShape(RoundedRectangle(cornerRadius: Constants.Favorites.deleteIconCornerRadius))
                 }
             }
         }

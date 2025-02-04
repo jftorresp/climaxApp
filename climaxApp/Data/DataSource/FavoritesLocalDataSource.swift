@@ -38,7 +38,6 @@ class FavoritesLocalDataSourceImpl: FavoritesLocalDataSource {
         } catch {
             print("Error while trying to load favorite citites: \(error)")
             throw DataError.unkwownError(message: error.localizedDescription)
-            return []
         }
     }
     

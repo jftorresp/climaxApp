@@ -24,19 +24,19 @@ struct SplashView: View {
                     Image.appLogo
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 200)
+                        .frame(width: Constants.Splash.appLogoWidth)
                     Text(appName)
                         .foregroundColor(.white)
-                        .font(.system(size: 40))
+                        .font(.system(size: FontSize.p40.rawValue))
                         .fontWeight(.bold)
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
-                        .scaleEffect(1.5)
+                        .scaleEffect(Constants.GeneralSizing.progressScaleEffect)
                 }
             }
             .ignoresSafeArea(.all)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + Constants.Splash.splashDelay) {
                     self.isActive = true
                 }
             }
