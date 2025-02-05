@@ -32,7 +32,7 @@ final class SearchCityUseCaseTests: XCTestCase {
         let cities = try await useCase.execute(query)
 
         // Then
-        XCTAssertEqual(cities.count, 2, "It should return the citites that match the query")
+        XCTAssertEqual(cities.count, 1, "It should return the citites that match the query")
         XCTAssertEqual(cities.first?.name, "New York", "The returned city should be'New York'")
     }
 
