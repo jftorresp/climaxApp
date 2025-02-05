@@ -8,6 +8,13 @@
 import Foundation
 
 class WeatherDataMapper {
+    /// Maps a `ForecastResponse` to a `ForecastModel` domain model.
+    ///
+    /// This function converts a `ForecastResponse`, which represents raw weather data from an API response,
+    /// into a structured `ForecastModel` that can be used in the domain layer.
+    ///
+    /// - Parameter response: A `ForecastResponse` containing weather forecast data from an API.
+    /// - Returns: A `ForecastModel` with structured forecast data.
     static func mapForecastToDomain(_ response: ForecastResponse) -> ForecastModel {
         let forecast = response.forecast.forecastday.map { forecastDate in
             ForecastDayModel(
@@ -59,6 +66,13 @@ class WeatherDataMapper {
         )
     }
     
+    /// Maps a `CityResponse` to a `CityModel` domain model.
+    ///
+    /// This function converts a `CityResponse`, which represents raw city data from an API response,
+    /// into a structured `CityModel` that can be used in the domain layer.
+    ///
+    /// - Parameter response: A `CityResponse` containing city data from an API.
+    /// - Returns: A `CityModel` with structured city information.
     static func mapCityToDomain(_ response: CityResponse) -> CityModel {
         return CityModel(
             id: response.id,

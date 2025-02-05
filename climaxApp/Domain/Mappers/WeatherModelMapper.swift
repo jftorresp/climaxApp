@@ -8,6 +8,13 @@
 import Foundation
 
 class WeatherModelMapper {
+    /// Maps a `ForecastModel` to a `Forecast` presentation model.
+    ///
+    /// This function converts a `ForecastModel`, which represents weather forecast data in a structured format
+    /// (such as from a network response or database), into a `Forecast` object that is ready for use in the UI.
+    ///
+    /// - Parameter model: A `ForecastModel` containing weather forecast data.
+    /// - Returns: A `Forecast` object formatted for presentation.
     static func mapForecastToPresentation(_ model: ForecastModel) -> Forecast {
         let forecast = model.forecast.map { forecastDate in
             ForecastDay(
@@ -59,6 +66,13 @@ class WeatherModelMapper {
         )
     }
     
+    /// Maps a `CityModel` to a `City` presentation model.
+    ///
+    /// This function converts a `CityModel`, which represents a city in a structured format
+    /// (such as from a network response or database), into a `City` object that is ready for use in the UI.
+    ///
+    /// - Parameter model: A `CityModel` containing city-related data.
+    /// - Returns: A `City` object formatted for presentation.
     static func mapCityToPresentation(_ model: CityModel) -> City {
         return City(
             id: model.id,

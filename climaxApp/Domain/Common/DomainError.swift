@@ -16,10 +16,14 @@ enum DomainError: Error, Equatable {
     case invalidAPIKey
     ///  Error code 2007: API key has been disabled.
     case disabledAPIKey
+    ///  Server error
     case serverError(message: String)
+    ///  Unexpected error
     case unexpectedError(message: String)
-    
+    ///  Saving error for local storage
     case savingError(message: String)
+    ///  Fetching error for local storage
     case fetchingError(message: String)
+    ///  Deleting error for local storage
     case deletingError(message: String)
 }
