@@ -17,6 +17,7 @@ struct SplashView: View {
     var body: some View {
         if isActive {
             CityForecastView(viewModel: CityForecastViewModel())
+                .accessibilityIdentifier("CityForecastView")
         } else {
             ZStack {
                 Color.brandBlue
@@ -25,21 +26,26 @@ struct SplashView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: Constants.Splash.appLogoWidth)
+                        .accessibilityIdentifier("appLogo")
                     Text(appName)
                         .foregroundColor(.white)
                         .font(.system(size: FontSize.p40.rawValue))
                         .fontWeight(.bold)
+                        .accessibilityIdentifier("appName")
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
                         .scaleEffect(Constants.GeneralSizing.progressScaleEffect)
+                        .accessibilityIdentifier("splashProgressView")
                 }
             }
             .ignoresSafeArea(.all)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + Constants.Splash.splashDelay) {
+                let delay = ProcessInfo.processInfo.arguments.contains("UITestMode") ? 10.0 : Constants.Splash.splashDelay
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     self.isActive = true
                 }
             }
+            .accessibilityIdentifier("SplashView")
         }
     }
 }
