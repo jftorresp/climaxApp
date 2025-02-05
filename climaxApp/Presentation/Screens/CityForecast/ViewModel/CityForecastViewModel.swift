@@ -72,6 +72,10 @@ class CityForecastViewModel: ObservableObject {
     init(getForecastUseCase: GetForecastByCityUseCase = GetForecastByCityUseCaseImpl(), favoritesUseCase: FavoritesUseCase = FavoritesUseCaseImpl()) {
         self.getForecastUseCase = getForecastUseCase
         self.favoritesUseCase = favoritesUseCase
+        
+        if ProcessInfo.processInfo.arguments.contains("UITest_Loading") {
+            self.isLoading = true
+        }
     }
     
     @MainActor

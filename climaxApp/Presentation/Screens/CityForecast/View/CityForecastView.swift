@@ -26,9 +26,11 @@ struct CityForecastView: View {
         NavigationView {
             content
                 .onAppear {
-                    viewModel.loadFavoriteCities()
-                    Task {
-                        try await viewModel.getForecast()
+                    if !ProcessInfo.processInfo.arguments.contains("UITest_Loading") {
+                        viewModel.loadFavoriteCities()
+                        Task {
+                            try await viewModel.getForecast()
+                        }
                     }
                 }
         }
@@ -102,6 +104,7 @@ extension CityForecastView {
         ProgressView()
             .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
             .scaleEffect(Constants.GeneralSizing.progressScaleEffect)
+            .accessibilityIdentifier("progressView")
     }
     
     var topBarView: some View {
@@ -145,6 +148,7 @@ extension CityForecastView {
                     .foregroundColor(.white)
                     .frame(width: Constants.CityForecast.smallIconWidth)
             }
+            .accessibilityIdentifier("searchButton")
         }
     }
     
@@ -187,6 +191,7 @@ extension CityForecastView {
                         .foregroundColor(.white)
                         .frame(width: Constants.CityForecast.smallIconWidth)
                 }
+                .accessibilityIdentifier("favoritesButton")
             }
             .frame(maxWidth: .infinity)
             .padding(.top, Sizing.xxxxSmall.rawValue)

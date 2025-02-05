@@ -15,6 +15,7 @@ struct SearchCityView: View {
 
     var body: some View {
         content
+            .accessibilityIdentifier("SearchCityView")
     }
     
     var content: some View {
